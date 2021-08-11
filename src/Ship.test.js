@@ -4,21 +4,10 @@ import { Ship } from "./Ship";
 
 // Only test methods or properties that are used outside
 test("Check if it has right property", () => {
-  // This will return object that has length,
-  // They've been hit or they've been sunk
-  // const myShip = Ship();
-
   expect(Ship()).toHaveProperty("length");
   expect(Ship(3)).toHaveProperty("length", 3);
   expect(Ship()).toHaveProperty("hit");
   expect(Ship()).toHaveProperty("isSunk");
-
-  // Ships should have a 'hit' function that takes
-  // a number and then marks that position as 'hit'
-
-  // isSunk() should be a function that calculates it
-  // based on their length and whether all of their positions
-  // are hit
 });
 
 test("hit funciton working correcty", () => {

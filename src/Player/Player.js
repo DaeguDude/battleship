@@ -1,0 +1,3 @@
+const Player = () => {};
+
+return { Player };

@@ -2,11 +2,11 @@ function Gameboard() {
   // Gameboards should be able to place ships at specific coordinates
   // by calling the ship factory function
 
-  const coordinates = [];
-  for (let i = 0; i < 10; i++) {
-    const line = new Array(10).fill(null);
-    coordinates.push(line);
-  }
+  const xCoords = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
+
+  const coordinates = xCoords.reduce((obj, cur, i) => {
+    return { ...obj, [cur]: new Array(10).fill(null) };
+  }, {});
 
   const placeShip = (shipObj, xCoord, yCoord) => {
     if (xCoord < 0 || xCoord > 9 || yCoord < 0 || yCoord > 9) {
@@ -29,7 +29,7 @@ function Gameboard() {
     return coordinates;
   };
 
-  const receiveAttack = () => {};
+  const receiveAttack = (xCoord, yCoord) => {};
 
   const areAllShipsSunk = () => {};
 
@@ -44,4 +44,5 @@ function Gameboard() {
   return { placeShip, receiveAttack, areAllShipsSunk, getCoordinates };
 }
 
-export { Gameboard };
+Gameboard();
+// export { Gameboard };

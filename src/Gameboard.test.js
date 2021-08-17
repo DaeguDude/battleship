@@ -8,14 +8,15 @@ test("10 x 10 coordinates created correctly", () => {
   // Each lines length should be 10 as well
   // All the values inside the each line should be null
   expect(myGameBoard.getCoordinates()).toHaveLength(10);
-  expect(myGameBoard.getCoordinates()[0]).toHaveLength(10);
-  expect(myGameBoard.getCoordinates()[9]).toHaveLength(10);
-  expect(myGameBoard.getCoordinates()[10]).toBeUndefined();
+  expect(myGameBoard.getCoordinates()).toHaveProperty("a");
+  // expect(myGameBoard.getCoordinates()[0]).toHaveLength(10);
+  // expect(myGameBoard.getCoordinates()[9]).toHaveLength(10);
+  // expect(myGameBoard.getCoordinates()[10]).toBeUndefined();
 
-  const shouldBe = [null, null, null, null, null, null, null, null, null, null];
-  myGameBoard
-    .getCoordinates()
-    .forEach((line) => expect(line).toEqual(shouldBe));
+  // const shouldBe = [null, null, null, null, null, null, null, null, null, null];
+  // myGameBoard
+  //   .getCoordinates()
+  //   .forEach((line) => expect(line).toEqual(shouldBe));
 });
 
 describe("PlaceShip", () => {
@@ -81,4 +82,13 @@ describe("PlaceShip", () => {
       "ship",
     ]);
   });
+});
+
+//
+describe("receive attack", () => {
+  // When receiving attack, if that coordinates isn't
+  // a null, and it's a "ship". Send hit function to the
+  // correct ship
+  // Otherwise, if there wasn't a ship at the coordinates,
+  // mark that as a miss, so you can track them
 });

@@ -1,4 +1,11 @@
-function Ship(length) {
+// Carrier
+// Battleship
+// Destroyer
+// Submarine
+// Patrol Boat
+function Ship(name, length) {
+  // Let's change the Ship to take a name, and automatically assigns
+  // the right length
   const positions = new Array(length).fill(null);
 
   const hit = (number) => {
@@ -12,7 +19,7 @@ function Ship(length) {
     return positions.every((position) => position === "hit");
   };
 
-  return { length, hit, isSunk };
+  return { name, length, hit, isSunk };
 }
 
 export { Ship };

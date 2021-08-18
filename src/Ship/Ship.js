@@ -1,8 +1,3 @@
-// Carrier
-// Battleship
-// Destroyer
-// Submarine
-// Patrol Boat
 function Ship(name) {
   const length = getLengthForBoat(name);
 

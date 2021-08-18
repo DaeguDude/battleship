@@ -44,5 +44,4 @@ function Gameboard() {
   return { placeShip, receiveAttack, areAllShipsSunk, getCoordinates };
 }
 
-Gameboard();
-// export { Gameboard };
+export { Gameboard };

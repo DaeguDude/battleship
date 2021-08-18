@@ -1,22 +1,34 @@
 import { Gameboard } from "./Gameboard";
 import { Ship } from "../Ship/Ship";
 
-test("10 x 10 coordinates created correctly", () => {
-  const myGameBoard = Gameboard();
+describe("Creates 10 x 10 coordinates", () => {
+  test.only("10 x 10 coordinates created correctly", () => {
+    const myGameBoard = Gameboard();
 
-  // Length should be 10
-  // Each lines length should be 10 as well
-  // All the values inside the each line should be null
-  expect(myGameBoard.getCoordinates()).toHaveLength(10);
-  expect(myGameBoard.getCoordinates()).toHaveProperty("a");
-  // expect(myGameBoard.getCoordinates()[0]).toHaveLength(10);
-  // expect(myGameBoard.getCoordinates()[9]).toHaveLength(10);
-  // expect(myGameBoard.getCoordinates()[10]).toBeUndefined();
+    expect(myGameBoard.getCoordinates()["a"]).toHaveLength(10);
+    expect(myGameBoard.getCoordinates()["b"]).toHaveLength(10);
+    expect(myGameBoard.getCoordinates()["c"]).toHaveLength(10);
+    expect(myGameBoard.getCoordinates()["d"]).toHaveLength(10);
+    expect(myGameBoard.getCoordinates()["e"]).toHaveLength(10);
+    expect(myGameBoard.getCoordinates()["f"]).toHaveLength(10);
+    expect(myGameBoard.getCoordinates()["g"]).toHaveLength(10);
+    expect(myGameBoard.getCoordinates()["h"]).toHaveLength(10);
+    expect(myGameBoard.getCoordinates()["i"]).toHaveLength(10);
+    expect(myGameBoard.getCoordinates()["j"]).toHaveLength(10);
 
-  // const shouldBe = [null, null, null, null, null, null, null, null, null, null];
-  // myGameBoard
-  //   .getCoordinates()
-  //   .forEach((line) => expect(line).toEqual(shouldBe));
+    expect(myGameBoard.getCoordinates()["k"]).toBeUndefined();
+    expect(myGameBoard.getCoordinates()["m"]).toBeUndefined();
+    expect(myGameBoard.getCoordinates()["z"]).toBeUndefined();
+    expect(myGameBoard.getCoordinates()).toHaveProperty("a");
+    // expect(myGameBoard.getCoordinates()[0]).toHaveLength(10);
+    // expect(myGameBoard.getCoordinates()[9]).toHaveLength(10);
+    // expect(myGameBoard.getCoordinates()[10]).toBeUndefined();
+
+    // const shouldBe = [null, null, null, null, null, null, null, null, null, null];
+    // myGameBoard
+    //   .getCoordinates()
+    //   .forEach((line) => expect(line).toEqual(shouldBe));
+  });
 });
 
 describe("PlaceShip", () => {

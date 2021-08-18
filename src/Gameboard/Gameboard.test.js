@@ -1,5 +1,5 @@
 import { Gameboard } from "./Gameboard";
-import { Ship } from "./Ship";
+import { Ship } from "../Ship/Ship";
 
 test("10 x 10 coordinates created correctly", () => {
   const myGameBoard = Gameboard();

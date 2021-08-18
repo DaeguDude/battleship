@@ -9,17 +9,18 @@ function Gameboard() {
   }, {});
 
   const placeShip = (shipObj, xCoord, yCoord) => {
-    if (xCoord < 0 || xCoord > 9 || yCoord < 0 || yCoord > 9) {
+    // Check if xCoords is in xCoords list
+    if (!xCoords.includes(xCoord) || yCoord < 0 || yCoord > 9) {
       return false;
     }
 
-    if (shipObj.length + xCoord - 1 > 9) {
-      return false;
-    }
+    // if (shipObj.length + xCoord - 1 > 9) {
+    //   return false;
+    // }
 
     // get yCoord row. ex) yCoord: 3, third row([2])
     for (let i = 0; i < shipObj.length; i++) {
-      coordinates[yCoord][xCoord + i] = "ship";
+      coordinates[xCoord][yCoord + i] = shipObj.name;
     }
 
     return coordinates[yCoord];

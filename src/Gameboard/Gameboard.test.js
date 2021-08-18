@@ -2,7 +2,7 @@ import { Gameboard } from "./Gameboard";
 import { Ship } from "../Ship/Ship";
 
 describe("Creates 10 x 10 coordinates", () => {
-  test.only("10 x 10 coordinates created correctly", () => {
+  test("10 x 10 coordinates created correctly", () => {
     const myGameBoard = Gameboard();
 
     expect(myGameBoard.getCoordinates()["a"]).toHaveLength(10);
@@ -20,24 +20,87 @@ describe("Creates 10 x 10 coordinates", () => {
     expect(myGameBoard.getCoordinates()["m"]).toBeUndefined();
     expect(myGameBoard.getCoordinates()["z"]).toBeUndefined();
     expect(myGameBoard.getCoordinates()).toHaveProperty("a");
-    // expect(myGameBoard.getCoordinates()[0]).toHaveLength(10);
-    // expect(myGameBoard.getCoordinates()[9]).toHaveLength(10);
-    // expect(myGameBoard.getCoordinates()[10]).toBeUndefined();
-
-    // const shouldBe = [null, null, null, null, null, null, null, null, null, null];
-    // myGameBoard
-    //   .getCoordinates()
-    //   .forEach((line) => expect(line).toEqual(shouldBe));
   });
 });
 
 describe("PlaceShip", () => {
-  const myGameBoard = Gameboard();
+  test.only("Placed the right ship", () => {
+    const myGameBoard = Gameboard();
+    const submarine = Ship("Submarine");
+    myGameBoard.placeShip(submarine, "a", 0);
+    expect(myGameBoard.getCoordinates()["a"]).toEqual([
+      "Submarine",
+      "Submarine",
+      "Submarine",
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+    ]);
+
+    myGameBoard.placeShip(Ship("Carrier"), "b", 5);
+    expect(myGameBoard.getCoordinates()["b"]).toEqual([
+      null,
+      null,
+      null,
+      null,
+      null,
+      "Carrier",
+      "Carrier",
+      "Carrier",
+      "Carrier",
+      "Carrier",
+    ]);
+    myGameBoard.placeShip(Ship("PatrolBoat"), "f", 2);
+    expect(myGameBoard.getCoordinates()["f"]).toEqual([
+      null,
+      null,
+      "PatrolBoat",
+      "PatrolBoat",
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+    ]);
+    myGameBoard.placeShip(Ship("Destroyer"), "j", 5);
+    expect(myGameBoard.getCoordinates()["j"]).toEqual([
+      null,
+      null,
+      null,
+      null,
+      null,
+      "Destroyer",
+      "Destroyer",
+      "Destroyer",
+      null,
+      null,
+    ]);
+
+    myGameBoard.placeShip(Ship("Battleship"), "i", 2);
+    expect(myGameBoard.getCoordinates()["i"]).toEqual([
+      null,
+      null,
+      "Battleship",
+      "Battleship",
+      "Battleship",
+      "Battleship",
+      null,
+      null,
+      null,
+      null,
+    ]);
+  });
+
   test("Coordinates does not exist", () => {
-    expect(myGameBoard.placeShip(Ship(2), 10, 9)).toEqual(false);
-    expect(myGameBoard.placeShip(Ship(2), 9, 12)).toEqual(false);
-    expect(myGameBoard.placeShip(Ship(2), 9, 10)).toEqual(false);
-    expect(myGameBoard.placeShip(Ship(2), -1, 100)).toEqual(false);
+    expect(myGameBoard.placeShip(Ship("Carrier"), 10, 9)).toEqual(false);
+    expect(myGameBoard.placeShip(Ship("Carrier"), 9, 12)).toEqual(false);
+    expect(myGameBoard.placeShip(Ship("Carrier"), 9, 10)).toEqual(false);
+    expect(myGameBoard.placeShip(Ship("Carrier"), -1, 100)).toEqual(false);
   });
   test("Coordinates exist, but not enough space", () => {
     expect(myGameBoard.placeShip(Ship(4), 7, 0)).toEqual(false);

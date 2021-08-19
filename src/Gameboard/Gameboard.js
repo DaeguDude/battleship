@@ -9,16 +9,20 @@ function Gameboard() {
   }, {});
 
   const placeShip = (shipObj, xCoord, yCoord) => {
-    // Check if xCoords is in xCoords list
-    if (!xCoords.includes(xCoord) || yCoord < 0 || yCoord > 9) {
-      return false;
+    if (!xCoords.includes(xCoord)) {
+      throw new Error("Invalid x coordinate");
     }
 
-    // if (shipObj.length + xCoord - 1 > 9) {
-    //   return false;
-    // }
+    if (yCoord < 0 || yCoord > 9) {
+      throw new Error("Invalid y coordinate");
+    }
 
-    // get yCoord row. ex) yCoord: 3, third row([2])
+    // ex) yCoord - 5, ship - Carrier(5)
+    // y - [5], [6], [7], [8], [9], So it is fine.
+    if (yCoord + shipObj.length > 10) {
+      throw new Error("There is not enough space to place the ship");
+    }
+
     for (let i = 0; i < shipObj.length; i++) {
       coordinates[xCoord][yCoord + i] = shipObj.name;
     }

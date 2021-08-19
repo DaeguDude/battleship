@@ -26,20 +26,6 @@ describe("Creates 10 x 10 coordinates", () => {
 describe("PlaceShip", () => {
   test.only("Placed the right ship", () => {
     const myGameBoard = Gameboard();
-    const submarine = Ship("Submarine");
-    myGameBoard.placeShip(submarine, "a", 0);
-    expect(myGameBoard.getCoordinates()["a"]).toEqual([
-      "Submarine",
-      "Submarine",
-      "Submarine",
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-    ]);
 
     myGameBoard.placeShip(Ship("Carrier"), "b", 5);
     expect(myGameBoard.getCoordinates()["b"]).toEqual([
@@ -54,19 +40,20 @@ describe("PlaceShip", () => {
       "Carrier",
       "Carrier",
     ]);
-    myGameBoard.placeShip(Ship("PatrolBoat"), "f", 2);
-    expect(myGameBoard.getCoordinates()["f"]).toEqual([
+    myGameBoard.placeShip(Ship("Battleship"), "i", 2);
+    expect(myGameBoard.getCoordinates()["i"]).toEqual([
       null,
       null,
-      "PatrolBoat",
-      "PatrolBoat",
-      null,
-      null,
+      "Battleship",
+      "Battleship",
+      "Battleship",
+      "Battleship",
       null,
       null,
       null,
       null,
     ]);
+
     myGameBoard.placeShip(Ship("Destroyer"), "j", 5);
     expect(myGameBoard.getCoordinates()["j"]).toEqual([
       null,
@@ -81,14 +68,28 @@ describe("PlaceShip", () => {
       null,
     ]);
 
-    myGameBoard.placeShip(Ship("Battleship"), "i", 2);
-    expect(myGameBoard.getCoordinates()["i"]).toEqual([
+    myGameBoard.placeShip(Ship("Submarine"), "a", 0);
+    expect(myGameBoard.getCoordinates()["a"]).toEqual([
+      "Submarine",
+      "Submarine",
+      "Submarine",
       null,
       null,
-      "Battleship",
-      "Battleship",
-      "Battleship",
-      "Battleship",
+      null,
+      null,
+      null,
+      null,
+      null,
+    ]);
+
+    myGameBoard.placeShip(Ship("PatrolBoat"), "f", 2);
+    expect(myGameBoard.getCoordinates()["f"]).toEqual([
+      null,
+      null,
+      "PatrolBoat",
+      "PatrolBoat",
+      null,
+      null,
       null,
       null,
       null,
@@ -132,11 +133,31 @@ describe("PlaceShip", () => {
   });
 });
 
-//
 describe("receive attack", () => {
-  // When receiving attack, if that coordinates isn't
-  // a null, and it's a "ship". Send hit function to the
-  // correct ship
-  // Otherwise, if there wasn't a ship at the coordinates,
-  // mark that as a miss, so you can track them
+  const myGameBoard = Gameboard();
+  myGameBoard.placeShip(Ship("Carrier"), "b", 5);
+  myGameBoard.placeShip(Ship("Battleship"), "i", 2);
+  myGameBoard.placeShip(Ship("Destroyer"), "j", 5);
+  myGameBoard.placeShip(Ship("Submarine"), "a", 0);
+  myGameBoard.placeShip(Ship("PatrolBoat"), "f", 2);
+
+  myGameBoard.receiveAttack("b", 4);
+  expect(myGameBoard.getCoordinates("b")).toEqual([
+    null,
+    null,
+    null,
+    null,
+    "missed",
+    "Carrier",
+    "Carrier",
+    "Carrier",
+    "Carrier",
+    "Carrier",
+  ]);
+
+  // ReceiveAttack function takes a pair of coordinates
+  // Determines whether or not the attack hit a ship and
+  // then sends the 'hit' function to the correctship
+
+  // Also records the coordinates of missed shot
 });

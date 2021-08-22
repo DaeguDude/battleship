@@ -1,4 +1,5 @@
 function Gameboard() {
+  const shipList = [];
   // Gameboards should be able to place ships at specific coordinates
   // by calling the ship factory function
 
@@ -27,16 +28,40 @@ function Gameboard() {
       coordinates[xCoord][yCoord + i] = shipObj.name;
     }
 
-    return coordinates[yCoord];
+    return shipList.push(shipObj);
   };
 
   const getCoordinates = () => {
     return coordinates;
   };
 
-  const receiveAttack = (xCoord, yCoord) => {};
+  const receiveAttack = (xCoord, yCoord) => {
+    if (!xCoords.includes(xCoord)) {
+      throw new Error("Invalid x coordinate");
+    }
+
+    if (yCoord < 0 || yCoord > 9) {
+      throw new Error("Invalid y coordinate");
+    }
+
+    // Get the specified coordinates by xCoord, yCoord
+    const coordinates = getCoordinates();
+    const specifiedCoordinate = coordinates[xCoord][yCoord];
+    if (specifiedCoordinate === "missed") {
+      return "This has been already shot";
+    }
+
+    coordinates[xCoord][yCoord] = "missed";
+
+    // It should sends the 'hit' function to the correct ship
+    // How do I do that?
+  };
 
   const areAllShipsSunk = () => {};
+
+  const getShip = (name) => {
+    return shipList.find((ship) => ship.name === name);
+  };
 
   // Gameboards should have a receiveAttack function that takes a piar of coordinates,
   // determines whether or not the attack hit a ship and then sends the 'hit'
@@ -46,7 +71,7 @@ function Gameboard() {
 
   // Gameboards should be able to report whether or not all of their ships have been sunk
 
-  return { placeShip, receiveAttack, areAllShipsSunk, getCoordinates };
+  return { placeShip, receiveAttack, areAllShipsSunk, getCoordinates, getShip };
 }
 
 export { Gameboard };

@@ -14,7 +14,11 @@ function Ship(name) {
     return positions.every((position) => position === "hit");
   };
 
-  return { name, length, hit, isSunk };
+  const getPosition = () => {
+    return positions;
+  };
+
+  return { name, length, hit, isSunk, getPosition };
 }
 
 function getLengthForBoat(name) {

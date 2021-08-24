@@ -221,10 +221,26 @@ describe("receive attack", () => {
     // It should sends the 'hit' function to the correct ship
     // How do I do that?
     const myGameBoard = Gameboard();
-    myGameBoard.placeShip(Ship("PatrolBoat"), "f", 2);
+    const PatrolBoat = Ship("PatrolBoat");
+
+    myGameBoard.placeShip(PatrolBoat, "f", 2);
     myGameBoard.receiveAttack("f", 2);
-    const PatrolBoatPosition = myGameBoard.getShip("PatrolBoat").getPosition();
-    expect(PatrolBoatPosition).toBe(["hit", null]);
+    expect(PatrolBoat.getPosition()).toEqual(["hit", null]);
+
+    const Carrier = Ship("Carrier");
+    myGameBoard.placeShip(Carrier, "b", 2);
+    myGameBoard.receiveAttack("b", 4);
+    expect(Carrier.getPosition()).toEqual([null, null, "hit", null, null]);
+
+    const Carrier = Ship("Carrier");
+    myGameBoard.placeShip(Carrier, "b", 2);
+    myGameBoard.receiveAttack("b", 4);
+    expect(Carrier.getPosition()).toEqual([null, null, "hit", null, null]);
+
+    const Carrier = Ship("Carrier");
+    myGameBoard.placeShip(Carrier, "b", 2);
+    myGameBoard.receiveAttack("b", 4);
+    expect(Carrier.getPosition()).toEqual([null, null, "hit", null, null]);
     // How do I know PatrolBoat has been hit?
   });
 

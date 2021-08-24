@@ -51,10 +51,18 @@ function Gameboard() {
       return "This has been already shot";
     }
 
-    coordinates[xCoord][yCoord] = "missed";
+    if (specifiedCoordinate === null) {
+      return (coordinates[xCoord][yCoord] = "missed");
+    }
 
-    // It should sends the 'hit' function to the correct ship
-    // How do I do that?
+    // I can hit it. However, how I can hit it in the
+    // right position?
+    const shipOnCoordinate = coordinates[xCoord][yCoord];
+    const foundShip = shipList.find((ship) => ship.name === shipOnCoordinate);
+    const firstIndexShipOnCoordinate = coordinates[xCoord].findIndex(
+      (element) => element === foundShip.name
+    );
+    foundShip.hit(yCoord - firstIndexShipOnCoordinate);
   };
 
   const areAllShipsSunk = () => {};

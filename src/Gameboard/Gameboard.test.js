@@ -232,21 +232,43 @@ describe("receive attack", () => {
     myGameBoard.receiveAttack("b", 4);
     expect(Carrier.getPosition()).toEqual([null, null, "hit", null, null]);
 
-    const Carrier = Ship("Carrier");
-    myGameBoard.placeShip(Carrier, "b", 2);
-    myGameBoard.receiveAttack("b", 4);
-    expect(Carrier.getPosition()).toEqual([null, null, "hit", null, null]);
+    const Battleship = Ship("Battleship");
+    myGameBoard.placeShip(Battleship, "f", 6);
+    myGameBoard.receiveAttack("f", 7);
+    expect(Battleship.getPosition()).toEqual([null, "hit", null, null]);
 
-    const Carrier = Ship("Carrier");
-    myGameBoard.placeShip(Carrier, "b", 2);
-    myGameBoard.receiveAttack("b", 4);
-    expect(Carrier.getPosition()).toEqual([null, null, "hit", null, null]);
     // How do I know PatrolBoat has been hit?
   });
 
-  // ReceiveAttack function takes a pair of coordinates
-  // Determines whether or not the attack hit a ship and
-  // then sends the 'hit' function to the correctship
+  test.only("Check if all ships are sunk", () => {
+    const myGameBoard = Gameboard();
+    myGameBoard.placeShip(Ship("Carrier"), "a", 0);
+    myGameBoard.receiveAttack("a", 0);
+    myGameBoard.receiveAttack("a", 1);
+    myGameBoard.receiveAttack("a", 2);
+    myGameBoard.receiveAttack("a", 3);
+    myGameBoard.receiveAttack("a", 4);
 
-  // Also records the coordinates of missed shot
+    myGameBoard.placeShip(Ship("Battleship"), "b", 0);
+    myGameBoard.receiveAttack("b", 0);
+    myGameBoard.receiveAttack("b", 1);
+    myGameBoard.receiveAttack("b", 2);
+    myGameBoard.receiveAttack("b", 3);
+
+    myGameBoard.placeShip(Ship("Destroyer"), "c", 0);
+    myGameBoard.receiveAttack("c", 0);
+    myGameBoard.receiveAttack("c", 1);
+    myGameBoard.receiveAttack("c", 2);
+
+    myGameBoard.placeShip(Ship("Submarine"), "d", 0);
+    myGameBoard.receiveAttack("d", 0);
+    myGameBoard.receiveAttack("d", 1);
+    myGameBoard.receiveAttack("d", 2);
+
+    myGameBoard.placeShip(Ship("PatrolBoat"), "e", 0);
+    myGameBoard.receiveAttack("e", 0);
+    myGameBoard.receiveAttack("e", 1);
+
+    expect(myGameBoard.areAllShipsSunk()).toBe(true);
+  });
 });

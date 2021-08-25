@@ -1,5 +1,8 @@
 function Ship(name) {
   const length = getLengthForBoat(name);
+  if (!length) {
+    throw new Error(`We don't have ${name} named boat`);
+  }
 
   const positions = new Array(length).fill(null);
 

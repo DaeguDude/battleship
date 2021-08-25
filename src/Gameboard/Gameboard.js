@@ -65,7 +65,9 @@ function Gameboard() {
     foundShip.hit(yCoord - firstIndexShipOnCoordinate);
   };
 
-  const areAllShipsSunk = () => {};
+  const areAllShipsSunk = () => {
+    return shipList.every((ship) => ship.isSunk());
+  };
 
   const getShip = (name) => {
     return shipList.find((ship) => ship.name === name);

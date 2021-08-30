@@ -2,98 +2,49 @@ import { Gameboard } from "./Gameboard";
 import { Ship } from "../Ship/Ship";
 
 describe("Creates 10 x 10 coordinates", () => {
-  test("10 x 10 coordinates created correctly", () => {
-    const myGameBoard = Gameboard();
+  test.only("10 x 10 coordinates created correctly", () => {
+    const myGameboard = Gameboard();
+    const arrWithFalses = Array(10).fill(false);
 
-    expect(myGameBoard.getCoordinates()["a"]).toHaveLength(10);
-    expect(myGameBoard.getCoordinates()["b"]).toHaveLength(10);
-    expect(myGameBoard.getCoordinates()["c"]).toHaveLength(10);
-    expect(myGameBoard.getCoordinates()["d"]).toHaveLength(10);
-    expect(myGameBoard.getCoordinates()["e"]).toHaveLength(10);
-    expect(myGameBoard.getCoordinates()["f"]).toHaveLength(10);
-    expect(myGameBoard.getCoordinates()["g"]).toHaveLength(10);
-    expect(myGameBoard.getCoordinates()["h"]).toHaveLength(10);
-    expect(myGameBoard.getCoordinates()["i"]).toHaveLength(10);
-    expect(myGameBoard.getCoordinates()["j"]).toHaveLength(10);
-
-    expect(myGameBoard.getCoordinates()["k"]).toBeUndefined();
-    expect(myGameBoard.getCoordinates()["m"]).toBeUndefined();
-    expect(myGameBoard.getCoordinates()["z"]).toBeUndefined();
-    expect(myGameBoard.getCoordinates()).toHaveProperty("a");
+    expect(myGameboard.getCoordinates()["a"]).toEqual(arrWithFalses);
+    expect(myGameboard.getCoordinates()["f"]).toEqual(arrWithFalses);
+    expect(myGameboard.getCoordinates()["j"]).toEqual(arrWithFalses);
+    expect(myGameboard.getCoordinates()["k"]).toBeUndefined();
+    expect(myGameboard.getCoordinates()["m"]).toBeUndefined();
+    expect(myGameboard.getCoordinates()["z"]).toBeUndefined();
   });
 });
 
 describe("PlaceShip", () => {
-  test("Placed the right ship", () => {
-    const myGameBoard = Gameboard();
+  test.only("Placed the right ship", () => {
+    const myGameboard = Gameboard();
 
-    myGameBoard.placeShip(Ship("Carrier"), "b", 5);
-    expect(myGameBoard.getCoordinates()["b"]).toEqual([
-      null,
-      null,
-      null,
-      null,
-      null,
+    myGameboard.placeShip(Ship("Carrier"), 5, "b");
+    expect(myGameboard.getCoordinates()["b"]).toEqual([
+      false,
+      false,
+      false,
+      false,
+      false,
       "Carrier",
       "Carrier",
       "Carrier",
       "Carrier",
       "Carrier",
     ]);
-    myGameBoard.placeShip(Ship("Battleship"), "i", 2);
-    expect(myGameBoard.getCoordinates()["i"]).toEqual([
-      null,
-      null,
-      "Battleship",
-      "Battleship",
-      "Battleship",
-      "Battleship",
-      null,
-      null,
-      null,
-      null,
-    ]);
 
-    myGameBoard.placeShip(Ship("Destroyer"), "j", 5);
-    expect(myGameBoard.getCoordinates()["j"]).toEqual([
-      null,
-      null,
-      null,
-      null,
-      null,
-      "Destroyer",
-      "Destroyer",
-      "Destroyer",
-      null,
-      null,
-    ]);
-
-    myGameBoard.placeShip(Ship("Submarine"), "a", 0);
-    expect(myGameBoard.getCoordinates()["a"]).toEqual([
-      "Submarine",
-      "Submarine",
-      "Submarine",
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-    ]);
-
-    myGameBoard.placeShip(Ship("PatrolBoat"), "f", 2);
-    expect(myGameBoard.getCoordinates()["f"]).toEqual([
-      null,
-      null,
+    myGameboard.placeShip(Ship("PatrolBoat"), 8, "j");
+    expect(myGameboard.getCoordinates()["j"]).toEqual([
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
       "PatrolBoat",
       "PatrolBoat",
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
     ]);
   });
 
@@ -101,34 +52,28 @@ describe("PlaceShip", () => {
     const myGameBoard = Gameboard();
     expect(() => {
       myGameBoard.placeShip(Ship("Battleship"), 3, 3);
-    }).toThrow("Invalid x coordinate");
+    }).toThrow("Invalid y coordinate");
     expect(() => {
       myGameBoard.placeShip(Ship("Battleship"), "z", 3);
     }).toThrow("Invalid x coordinate");
     expect(() => {
-      myGameBoard.placeShip(Ship("Battleship"), "a", -1);
-    }).toThrow("Invalid y coordinate");
+      myGameBoard.placeShip(Ship("Battleship"), -1, "a");
+    }).toThrow("Invalid x coordinate");
     expect(() => {
-      myGameBoard.placeShip(Ship("Battleship"), "a", 10);
-    }).toThrow("Invalid y coordinate");
+      myGameBoard.placeShip(Ship("Battleship"), 10, "b");
+    }).toThrow("Invalid x coordinate");
   });
 
   test("Coordinates exist, but not enough space", () => {
     const myGameBoard = Gameboard();
     expect(() => {
-      myGameBoard.placeShip(Ship("Carrier"), "a", 6);
+      myGameBoard.placeShip(Ship("Carrier"), 6, "a");
     }).toThrow("not enough space");
     expect(() => {
-      myGameBoard.placeShip(Ship("Battleship"), "i", 7);
+      myGameBoard.placeShip(Ship("Battleship"), 7, "i");
     }).toThrow("not enough space");
     expect(() => {
-      myGameBoard.placeShip(Ship("Destroyer"), "d", 8);
-    }).toThrow("not enough space");
-    expect(() => {
-      myGameBoard.placeShip(Ship("Submarine"), "f", 8);
-    }).toThrow("not enough space");
-    expect(() => {
-      myGameBoard.placeShip(Ship("PatrolBoat"), "j", 9);
+      myGameBoard.placeShip(Ship("Destroyer"), 8, "d");
     }).toThrow("not enough space");
   });
 });
@@ -218,57 +163,47 @@ describe("receive attack", () => {
   });
 
   test("Sends the hit function to the correctship", () => {
-    // It should sends the 'hit' function to the correct ship
-    // How do I do that?
-    const myGameBoard = Gameboard();
+    const myGameboard = Gameboard();
     const PatrolBoat = Ship("PatrolBoat");
-
-    myGameBoard.placeShip(PatrolBoat, "f", 2);
-    myGameBoard.receiveAttack("f", 2);
-    expect(PatrolBoat.getPosition()).toEqual(["hit", null]);
+    myGameboard.placeShip(PatrolBoat, 2, "f");
+    myGameboard.receiveAttack(2, "f");
+    expect(PatrolBoat.getHits()).toEqual([true, false]);
 
     const Carrier = Ship("Carrier");
-    myGameBoard.placeShip(Carrier, "b", 2);
-    myGameBoard.receiveAttack("b", 4);
-    expect(Carrier.getPosition()).toEqual([null, null, "hit", null, null]);
-
-    const Battleship = Ship("Battleship");
-    myGameBoard.placeShip(Battleship, "f", 6);
-    myGameBoard.receiveAttack("f", 7);
-    expect(Battleship.getPosition()).toEqual([null, "hit", null, null]);
-
-    // How do I know PatrolBoat has been hit?
+    myGameboard.placeShip(Carrier, 2, "b");
+    myGameboard.receiveAttack(4, "b");
+    expect(Carrier.getHits()).toEqual([false, false, true, false, false]);
   });
 
-  test.only("Check if all ships are sunk", () => {
-    const myGameBoard = Gameboard();
-    myGameBoard.placeShip(Ship("Carrier"), "a", 0);
-    myGameBoard.receiveAttack("a", 0);
-    myGameBoard.receiveAttack("a", 1);
-    myGameBoard.receiveAttack("a", 2);
-    myGameBoard.receiveAttack("a", 3);
-    myGameBoard.receiveAttack("a", 4);
+  test("Check if all ships are sunk", () => {
+    const myGameboard = Gameboard();
+    myGameboard.placeShip(Ship("Carrier"), 0, "a");
+    myGameboard.receiveAttack(0, "a");
+    myGameboard.receiveAttack(1, "a");
+    myGameboard.receiveAttack(2, "a");
+    myGameboard.receiveAttack(3, "a");
+    myGameboard.receiveAttack(4, "a");
 
-    myGameBoard.placeShip(Ship("Battleship"), "b", 0);
-    myGameBoard.receiveAttack("b", 0);
-    myGameBoard.receiveAttack("b", 1);
-    myGameBoard.receiveAttack("b", 2);
-    myGameBoard.receiveAttack("b", 3);
+    myGameboard.placeShip(Ship("Battleship"), 0, "b");
+    myGameboard.receiveAttack(0, "b");
+    myGameboard.receiveAttack(1, "b");
+    myGameboard.receiveAttack(2, "b");
+    myGameboard.receiveAttack(3, "b");
 
-    myGameBoard.placeShip(Ship("Destroyer"), "c", 0);
-    myGameBoard.receiveAttack("c", 0);
-    myGameBoard.receiveAttack("c", 1);
-    myGameBoard.receiveAttack("c", 2);
+    myGameboard.placeShip(Ship("Destroyer"), 0, "c");
+    myGameboard.receiveAttack(0, "c");
+    myGameboard.receiveAttack(1, "c");
+    myGameboard.receiveAttack(2, "c");
 
-    myGameBoard.placeShip(Ship("Submarine"), "d", 0);
-    myGameBoard.receiveAttack("d", 0);
-    myGameBoard.receiveAttack("d", 1);
-    myGameBoard.receiveAttack("d", 2);
+    myGameboard.placeShip(Ship("Submarine"), 0, "d");
+    myGameboard.receiveAttack(0, "d");
+    myGameboard.receiveAttack(1, "d");
+    myGameboard.receiveAttack(2, "d");
 
-    myGameBoard.placeShip(Ship("PatrolBoat"), "e", 0);
-    myGameBoard.receiveAttack("e", 0);
-    myGameBoard.receiveAttack("e", 1);
+    myGameboard.placeShip(Ship("PatrolBoat"), 0, "e");
+    myGameboard.receiveAttack(0, "e");
+    myGameboard.receiveAttack(1, "e");
 
-    expect(myGameBoard.areAllShipsSunk()).toBe(true);
+    expect(myGameboard.areAllShipsSunk()).toBe(true);
   });
 });

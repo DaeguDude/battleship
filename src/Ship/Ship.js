@@ -4,24 +4,29 @@ function Ship(name) {
     throw new Error(`We don't have ${name} named boat`);
   }
 
-  const positions = new Array(length).fill(null);
+  let hits = new Array(length).fill(false);
 
-  const hit = (number) => {
-    if (number >= 0 && number < length) {
-      positions[number] = "hit";
-    }
-    return positions;
+  // Creates side effects - We can assert the public side effects
+  const hit = (hitLocation) => {
+    hits = hitReducer(hits, hitLocation);
+  };
+
+  // True pure function
+  const hitReducer = (hits, hitLocation) => {
+    const newHits = [...hits];
+    newHits[hitLocation] = true;
+    return newHits;
   };
 
   const isSunk = () => {
-    return positions.every((position) => position === "hit");
+    return hits.every((position) => position === true);
   };
 
-  const getPosition = () => {
-    return positions;
+  const getHits = () => {
+    return hits;
   };
 
-  return { name, length, hit, isSunk, getPosition };
+  return { name, length, hit, isSunk, getHits };
 }
 
 function getLengthForBoat(name) {

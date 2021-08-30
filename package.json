@@ -41,5 +41,8 @@
       "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
       "^config$": "<rootDir>/configs/app-config.js"
     }
+  },
+  "dependencies": {
+    "axios": "^0.21.1"
   }
 }

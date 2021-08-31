@@ -1,3 +1,5 @@
-const Player = () => {};
+const Player = () => {
+  return {};
+};
 
-return { Player };
+export { Player };

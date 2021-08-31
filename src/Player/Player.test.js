@@ -1,5 +1,4 @@
 import { Player } from "./Player";
-import { Gameboard } from "../Gameboard";
 
 /**
  * Players can take turns playing the game by attacking the

@@ -67,7 +67,7 @@ function Gameboard() {
     }
 
     if (coordinates[yCoord][xCoord] === false) {
-      return (coordinates[yCoord][xCoord] = "missed");
+      return updateCoordinates(coordinates, xCoord, yCoord, "missed");
     }
 
     if (
@@ -92,5 +92,11 @@ function Gameboard() {
 
   return { placeShip, receiveAttack, areAllShipsSunk, getCoordinates };
 }
+
+const updateCoordinates = (oldCoordinates, xCoord, yCoord, value) => {
+  const newCoordinates = Object.assign({}, oldCoordinates);
+  newCoordinates[yCoord][xCoord] = value;
+  return newCoordinates;
+};
 
 export { Gameboard };

@@ -2,7 +2,7 @@ import { Gameboard } from "./Gameboard";
 import { Ship } from "../Ship/Ship";
 
 describe("Creates 10 x 10 coordinates", () => {
-  test.only("10 x 10 coordinates created correctly", () => {
+  test("10 x 10 coordinates created correctly", () => {
     const myGameboard = Gameboard();
     const arrWithFalses = Array(10).fill(false);
 
@@ -16,7 +16,7 @@ describe("Creates 10 x 10 coordinates", () => {
 });
 
 describe("PlaceShip", () => {
-  test.only("Placed the right ship", () => {
+  test("Placed the right ship", () => {
     const myGameboard = Gameboard();
 
     myGameboard.placeShip(Ship("Carrier"), 5, "b");
@@ -82,82 +82,49 @@ describe("receive attack", () => {
   test("Coordinates does not exist", () => {
     const myGameBoard = Gameboard();
     expect(() => {
-      myGameBoard.placeShip(Ship("Battleship"), 3, 3);
+      myGameBoard.receiveAttack(10, "a");
     }).toThrow("Invalid x coordinate");
     expect(() => {
-      myGameBoard.placeShip(Ship("Battleship"), "z", 3);
+      myGameBoard.receiveAttack(-1, "a");
     }).toThrow("Invalid x coordinate");
     expect(() => {
-      myGameBoard.placeShip(Ship("Battleship"), "a", -1);
+      myGameBoard.receiveAttack(3, "z");
     }).toThrow("Invalid y coordinate");
     expect(() => {
-      myGameBoard.placeShip(Ship("Battleship"), "a", 10);
+      myGameBoard.receiveAttack(3, "u");
     }).toThrow("Invalid y coordinate");
   });
 
   test("mark missed shot", () => {
-    const myGameBoard = Gameboard();
-    myGameBoard.placeShip(Ship("Carrier"), "b", 5);
-    myGameBoard.receiveAttack("b", 4);
-    myGameBoard.receiveAttack("b", 0);
-    myGameBoard.receiveAttack("b", 2);
-    expect(myGameBoard.getCoordinates()["b"][4]).toEqual("missed");
-    expect(myGameBoard.getCoordinates()["b"][0]).toEqual("missed");
-    expect(myGameBoard.getCoordinates()["b"][2]).toEqual("missed");
+    const myGameboard = Gameboard();
+    myGameboard.placeShip(Ship("Carrier"), 5, "b");
+    myGameboard.placeShip(Ship("Battleship"), 2, "i");
 
-    myGameBoard.placeShip(Ship("Battleship"), "i", 2);
-    myGameBoard.receiveAttack("i", 0);
-    myGameBoard.receiveAttack("i", 7);
-    myGameBoard.receiveAttack("i", 6);
-    expect(myGameBoard.getCoordinates()["i"][0]).toEqual("missed");
-    expect(myGameBoard.getCoordinates()["i"][7]).toEqual("missed");
-    expect(myGameBoard.getCoordinates()["i"][6]).toEqual("missed");
+    myGameboard.receiveAttack(3, "a");
+    myGameboard.receiveAttack(4, "b");
+    myGameboard.receiveAttack(5, "f");
+    myGameboard.receiveAttack(3, "j");
 
-    myGameBoard.placeShip(Ship("Destroyer"), "j", 5);
-    myGameBoard.receiveAttack("j", 9);
-    myGameBoard.receiveAttack("j", 8);
-    myGameBoard.receiveAttack("j", 4);
-    expect(myGameBoard.getCoordinates()["j"][9]).toEqual("missed");
-    expect(myGameBoard.getCoordinates()["j"][8]).toEqual("missed");
-    expect(myGameBoard.getCoordinates()["j"][4]).toEqual("missed");
-
-    myGameBoard.placeShip(Ship("Submarine"), "a", 0);
-    myGameBoard.receiveAttack("a", 3);
-    myGameBoard.receiveAttack("a", 4);
-    myGameBoard.receiveAttack("a", 9);
-    expect(myGameBoard.getCoordinates()["a"][3]).toEqual("missed");
-    expect(myGameBoard.getCoordinates()["a"][4]).toEqual("missed");
-    expect(myGameBoard.getCoordinates()["a"][9]).toEqual("missed");
-
-    myGameBoard.placeShip(Ship("PatrolBoat"), "f", 2);
-    myGameBoard.receiveAttack("f", 4);
-    myGameBoard.receiveAttack("f", 9);
-    myGameBoard.receiveAttack("f", 1);
-    expect(myGameBoard.getCoordinates()["f"][4]).toEqual("missed");
-    expect(myGameBoard.getCoordinates()["f"][9]).toEqual("missed");
-    expect(myGameBoard.getCoordinates()["f"][1]).toEqual("missed");
+    const coordinates = myGameboard.getCoordinates();
+    expect(coordinates["a"][3]).toBe("missed");
+    expect(coordinates["b"][4]).toBe("missed");
+    expect(coordinates["f"][5]).toBe("missed");
+    expect(coordinates["j"][3]).toBe("missed");
   });
 
   test("can't shot at the coordinate that is already shot", () => {
     const myGameBoard = Gameboard();
-    myGameBoard.receiveAttack("a", 3);
-    myGameBoard.receiveAttack("b", 0);
-    myGameBoard.receiveAttack("f", 8);
-    myGameBoard.receiveAttack("i", 9);
-    myGameBoard.receiveAttack("j", 2);
-    expect(myGameBoard.receiveAttack("a", 3)).toEqual(
+    myGameBoard.receiveAttack(3, "a");
+    myGameBoard.receiveAttack(0, "b");
+    myGameBoard.receiveAttack(8, "f");
+
+    expect(myGameBoard.receiveAttack(3, "a")).toEqual(
       "This has been already shot"
     );
-    expect(myGameBoard.receiveAttack("b", 0)).toEqual(
+    expect(myGameBoard.receiveAttack(0, "b")).toEqual(
       "This has been already shot"
     );
-    expect(myGameBoard.receiveAttack("f", 8)).toEqual(
-      "This has been already shot"
-    );
-    expect(myGameBoard.receiveAttack("i", 9)).toEqual(
-      "This has been already shot"
-    );
-    expect(myGameBoard.receiveAttack("j", 2)).toEqual(
+    expect(myGameBoard.receiveAttack(8, "f")).toEqual(
       "This has been already shot"
     );
   });

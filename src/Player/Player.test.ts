@@ -16,3 +16,15 @@ import { Player } from "./Player";
 // How does player attacking the enemy gameboard?
 // It needs a gameboard from enemy. We will need to use
 // Gameboard
+
+// How can players take turns...?
+
+// How can players can attack the enemy gameboard?
+
+// Game
+// Creating Players and Gameboards.
+
+// Players...
+// - name
+// - Ships
+// - gameboards

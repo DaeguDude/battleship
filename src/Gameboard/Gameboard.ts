@@ -1,15 +1,20 @@
+import { Ship } from "../types";
+import { XCoordinates, YCoordinates } from "../types";
+
 function Gameboard() {
-  let shipList = [];
-  // Gameboards should be able to place ships at specific coordinates
-  // by calling the ship factory function
+  let shipList: Ship[] = [];
 
   const yCoords = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
 
-  let coordinates = yCoords.reduce((obj, cur) => {
+  let coordinates: any = yCoords.reduce((obj, cur) => {
     return { ...obj, [cur]: new Array(10).fill(false) };
   }, {});
 
-  const placeShip = (shipObj, xCoord, yCoord) => {
+  const placeShip = (
+    shipObj: Ship,
+    xCoord: XCoordinates,
+    yCoord: YCoordinates
+  ) => {
     if (xCoord < 0 || xCoord > 9 || typeof xCoord !== "number") {
       throw new Error("Invalid x coordinate");
     }
@@ -36,7 +41,7 @@ function Gameboard() {
     shipList = shipReducer(shipList, shipObj);
   };
 
-  const placeShipReducer = (placeShipInfo) => {
+  const placeShipReducer = (placeShipInfo: any) => {
     const { oldCoordinates, shipObj, xCoord, yCoord } = placeShipInfo;
     const newCoordinates = Object.assign({}, oldCoordinates);
 
@@ -47,7 +52,7 @@ function Gameboard() {
     return newCoordinates;
   };
 
-  const shipReducer = (oldShipList, newBoat) => {
+  const shipReducer = (oldShipList: Ship[], newBoat: Ship) => {
     const newShipList = [...oldShipList];
     newShipList.push(newBoat);
     return newShipList;
@@ -57,7 +62,7 @@ function Gameboard() {
     return coordinates;
   };
 
-  const receiveAttack = (xCoord, yCoord) => {
+  const receiveAttack = (xCoord: XCoordinates, yCoord: YCoordinates) => {
     if (xCoord < 0 || xCoord > 9 || typeof xCoord !== "number") {
       throw new Error("Invalid x coordinate");
     }
@@ -81,7 +86,7 @@ function Gameboard() {
       (ship) => ship.name === coordinates[yCoord][xCoord]
     );
     const firstIndexShipOnCoordinate = coordinates[yCoord].findIndex(
-      (element) => element === foundShip.name
+      (element: any) => element === foundShip.name
     );
     foundShip.hit(xCoord - firstIndexShipOnCoordinate);
   };
@@ -93,7 +98,12 @@ function Gameboard() {
   return { placeShip, receiveAttack, areAllShipsSunk, getCoordinates };
 }
 
-const updateCoordinates = (oldCoordinates, xCoord, yCoord, value) => {
+const updateCoordinates = (
+  oldCoordinates: any,
+  xCoord: XCoordinates,
+  yCoord: YCoordinates,
+  value: any
+) => {
   const newCoordinates = Object.assign({}, oldCoordinates);
   newCoordinates[yCoord][xCoord] = value;
   return newCoordinates;

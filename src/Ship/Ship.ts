@@ -1,35 +1,37 @@
-function Ship(name) {
+import { Hits, Ship as ShipType } from "../types";
+
+function Ship(name: string): ShipType {
   const length = getLengthForBoat(name);
   if (!length) {
     throw new Error(`We don't have ${name} named boat`);
   }
 
-  let hits = new Array(length).fill(false);
+  let hits: Hits = new Array(length).fill(false);
 
   // Creates side effects - We can assert the public side effects
-  const hit = (hitLocation) => {
+  const hit = (hitLocation: number) => {
     hits = hitReducer(hits, hitLocation);
   };
 
   // True pure function
-  const hitReducer = (hits, hitLocation) => {
+  const hitReducer = (hits: Hits, hitLocation: number) => {
     const newHits = [...hits];
     newHits[hitLocation] = true;
     return newHits;
   };
 
-  const isSunk = () => {
+  const isSunk = (): boolean => {
     return hits.every((position) => position === true);
   };
 
-  const getHits = () => {
+  const getHits = (): Hits => {
     return hits;
   };
 
   return { name, length, hit, isSunk, getHits };
 }
 
-function getLengthForBoat(name) {
+function getLengthForBoat(name: string) {
   switch (name) {
     case "Carrier":
       return 5;

@@ -8,6 +8,17 @@ export interface Ship {
   getHits: () => Hits;
 }
 
+export interface Gameboard {
+  placeShip: (
+    shipObj: Ship,
+    xCoord: XCoordinates,
+    yCoord: YCoordinates
+  ) => void;
+  receiveAttack: (xCoord: XCoordinates, yCoord: YCoordinates) => void;
+  areAllShipsSunk: () => boolean;
+  getCoordinates: () => any; // coordinates
+}
+
 export type YCoordinates =
   | "a"
   | "b"

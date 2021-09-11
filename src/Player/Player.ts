@@ -1,5 +1,11 @@
-const Player = (name) => {
-  const hit = (gameboard, xCoord, yCoord) => {
+import { Gameboard, XCoordinates, YCoordinates } from "../types";
+
+const Player = (name: string) => {
+  const hit = (
+    gameboard: Gameboard,
+    xCoord: XCoordinates,
+    yCoord: YCoordinates
+  ) => {
     gameboard.receiveAttack(xCoord, yCoord);
   };
 

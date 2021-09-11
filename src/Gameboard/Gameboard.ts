@@ -1,7 +1,8 @@
 import { Ship } from "../types";
 import { XCoordinates, YCoordinates } from "../types";
+import { Gameboard as GameboardType } from "../types";
 
-function Gameboard() {
+function Gameboard(): GameboardType {
   let shipList: Ship[] = [];
 
   const yCoords = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];

@@ -1,29 +1,25 @@
-import { Ship } from "../types";
-import { XCoordinates, YCoordinates } from "../types";
-import { Gameboard as GameboardType } from "../types";
+import {
+  Ship,
+  Coordinates,
+  XCoordinates,
+  YCoordinates,
+  Gameboard as GameboardType,
+} from "../types";
 
 function Gameboard(): GameboardType {
   let shipList: Ship[] = [];
 
   const yCoords = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
 
-  let coordinates: any = yCoords.reduce((obj, cur) => {
-    return { ...obj, [cur]: new Array(10).fill(false) };
-  }, {});
+  let coordinates = yCoords.reduce((obj, cur) => {
+    return { ...obj, [cur]: new Array(10).fill("noHit") };
+  }, {} as Coordinates);
 
   const placeShip = (
     shipObj: Ship,
     xCoord: XCoordinates,
     yCoord: YCoordinates
   ) => {
-    if (xCoord < 0 || xCoord > 9 || typeof xCoord !== "number") {
-      throw new Error("Invalid x coordinate");
-    }
-
-    if (!yCoords.includes(yCoord)) {
-      throw new Error("Invalid y coordinate");
-    }
-
     if (xCoord + shipObj.length > 10) {
       throw new Error("There is not enough space to place the ship");
     }
@@ -64,32 +60,32 @@ function Gameboard(): GameboardType {
   };
 
   const receiveAttack = (xCoord: XCoordinates, yCoord: YCoordinates) => {
-    if (xCoord < 0 || xCoord > 9 || typeof xCoord !== "number") {
-      throw new Error("Invalid x coordinate");
-    }
-
-    if (!yCoords.includes(yCoord)) {
-      throw new Error("Invalid y coordinate");
-    }
-
-    if (coordinates[yCoord][xCoord] === false) {
-      return updateCoordinates(coordinates, xCoord, yCoord, "missed");
-    }
-
     if (
       coordinates[yCoord][xCoord] === "missed" ||
-      coordinates[yCoord][xCoord] === true
+      coordinates[yCoord][xCoord].includes("hit")
     ) {
       return "This has been already shot";
     }
 
+    if (coordinates[yCoord][xCoord] === "noHit") {
+      return updateCoordinates(coordinates, xCoord, yCoord, "missed");
+    }
+
+    // hit it
+    // Mark as hit on the board
+
+    // Find a boat
     const foundShip = shipList.find(
       (ship) => ship.name === coordinates[yCoord][xCoord]
     );
+
+    // Calculate which position of found boat to hit
     const firstIndexShipOnCoordinate = coordinates[yCoord].findIndex(
-      (element: any) => element === foundShip.name
+      (element: any) => element.includes(foundShip.name)
     );
+
     foundShip.hit(xCoord - firstIndexShipOnCoordinate);
+    coordinates[yCoord][xCoord] = `hit-${foundShip.name}`;
   };
 
   const areAllShipsSunk = () => {

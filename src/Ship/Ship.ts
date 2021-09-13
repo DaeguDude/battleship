@@ -1,6 +1,6 @@
-import { Hits, Ship as ShipType } from "../types";
+import { Hits, Ship as ShipType, ShipNames } from "../types";
 
-function Ship(name: string): ShipType {
+function Ship(name: ShipNames): ShipType {
   const length = getLengthForBoat(name);
   if (!length) {
     throw new Error(`We don't have ${name} named boat`);

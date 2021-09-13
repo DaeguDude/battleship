@@ -1,15 +1,6 @@
 import { Ship } from "./Ship";
 
 describe("It returns all the public properties and methods", () => {
-  test("Doesn't create boats that are not specified", () => {
-    expect(() => {
-      Ship("carrrrier");
-    }).toThrow("We don't have");
-    expect(() => {
-      Ship("Gatrolboat");
-    }).toThrow("We don't have");
-  });
-
   test("It has all the properties", () => {
     const Carrier = Ship("Carrier");
     expect(Carrier).toHaveProperty("length");

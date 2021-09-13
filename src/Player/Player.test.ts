@@ -1,81 +1,57 @@
 import { Player } from "./Player";
 import { Gameboard } from "../Gameboard/Gameboard";
 import { Ship } from "../Ship/Ship";
-
-// jest.mock("../Gameboard/Gameboard");
-
-// Maybe something with ES6 import syntax is different
-jest.mock("../Gameboard/Gameboard", () => {
-  return jest.fn(() => 42);
-});
+import { XCoordinates, YCoordinates } from "../types";
 
 describe("Player", () => {
-  test.only("check if it hits", () => {
-    const newPlayer = Player();
-    console.log(Gameboard);
-    // const gameBoard = Gameboard();
-    // newPlayer.hit(gameBoard, 3, "a");
-    // expect(gameBoard.getCoordinates()["a"][3]).toBe("missed");
-  });
-
-  test("hits the ship", () => {
-    const newPlayer = Player();
+  test("check if it hits", () => {
+    const newPlayer = Player("Daegudude");
     const gameBoard = Gameboard();
-    const ship = Ship("Carrier");
-    gameBoard.placeShip(ship, 3, "a");
+    gameBoard.placeShip(Ship("Battleship"), 3, "b");
+
     newPlayer.hit(gameBoard, 3, "a");
-    expect(ship.getHits()).toEqual([true, false, false, false, false]);
+    expect(gameBoard.getCoordinates()["a"][3]).toBe("missed");
+
+    newPlayer.hit(gameBoard, 3, "b");
+    expect(gameBoard.getCoordinates()["b"][3]).toBe("hit-Battleship");
   });
 });
 
 describe("Computer Player", () => {
-  test("check if it hits", () => {
+  const yCoords: YCoordinates[] = [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+  ];
+  test("Can make a random hit", () => {
     const newPlayer = Player("computer");
     const gameBoard = Gameboard();
-    console.log(gameBoard);
 
-    // newPlayer.hit(gameBoard);
+    newPlayer.hit(gameBoard);
+    newPlayer.hit(gameBoard);
+    newPlayer.hit(gameBoard);
+    newPlayer.hit(gameBoard);
+    newPlayer.hit(gameBoard);
+    // Iterate through the coordinates
+    // and check if it has number of hits.
+    let count = 0;
+    const coordinates = gameBoard.getCoordinates();
+    yCoords.forEach((yCoord) => {
+      for (let i = 0; i < 10; i++) {
+        // if it is...missed. count + 1
+        if (coordinates[yCoord][i] === "missed") {
+          count += 1;
+        }
+      }
+    });
 
-    // Check what xCoord, yCoord was that were passed to the gameBoard.receiveAttack
-    // And then check if that was hit correctly
-    // expect(gameBoard.getCoordinates()["a"][3]).toBe("missed");
-  });
-
-  test("hits the ship", () => {
-    const newPlayer = Player();
-    const gameBoard = Gameboard();
-    const ship = Ship("Carrier");
-    gameBoard.placeShip(ship, 3, "a");
-    newPlayer.hit(gameBoard, 3, "a");
-    expect(ship.getHits()).toEqual([true, false, false, false, false]);
+    expect(count).toBe(5);
   });
 });
-
-/**
- * Players can take turns playing the game by attacking the
- * enemy gameboard
- */
-
-/**
- * The game is played against the computer, so make 'computer'
- * players capable of making random plays. The AI doesn't
- * have to be smart, but it should know whether or not a
- * given move is legal.(i.e. it shouldn't shoot the same
- * coordinate twice)
- */
-
-// How does player attacking the enemy gameboard?
-// It needs a gameboard from enemy. We will need to use
-// Gameboard
-
-// How can players take turns...?
-
-// How can players can attack the enemy gameboard?
-
-// Game
-// Creating Players and Gameboards.
-
-// Players...
-// - name
-// - Ships
-// - gameboards

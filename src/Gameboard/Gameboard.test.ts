@@ -4,11 +4,11 @@ import { Ship } from "../Ship/Ship";
 describe("Creates 10 x 10 coordinates", () => {
   test("10 x 10 coordinates created correctly", () => {
     const myGameboard = Gameboard();
-    const arrWithFalses = Array(10).fill(false);
+    const arrWithNoHit = Array(10).fill("noHit");
 
-    expect(myGameboard.getCoordinates()["a"]).toEqual(arrWithFalses);
-    expect(myGameboard.getCoordinates()["f"]).toEqual(arrWithFalses);
-    expect(myGameboard.getCoordinates()["j"]).toEqual(arrWithFalses);
+    expect(myGameboard.getCoordinates()["a"]).toEqual(arrWithNoHit);
+    expect(myGameboard.getCoordinates()["f"]).toEqual(arrWithNoHit);
+    expect(myGameboard.getCoordinates()["j"]).toEqual(arrWithNoHit);
     expect(myGameboard.getCoordinates()["k"]).toBeUndefined();
     expect(myGameboard.getCoordinates()["m"]).toBeUndefined();
     expect(myGameboard.getCoordinates()["z"]).toBeUndefined();
@@ -21,11 +21,11 @@ describe("PlaceShip", () => {
 
     myGameboard.placeShip(Ship("Carrier"), 5, "b");
     expect(myGameboard.getCoordinates()["b"]).toEqual([
-      false,
-      false,
-      false,
-      false,
-      false,
+      "noHit",
+      "noHit",
+      "noHit",
+      "noHit",
+      "noHit",
       "Carrier",
       "Carrier",
       "Carrier",
@@ -35,14 +35,14 @@ describe("PlaceShip", () => {
 
     myGameboard.placeShip(Ship("PatrolBoat"), 8, "j");
     expect(myGameboard.getCoordinates()["j"]).toEqual([
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
+      "noHit",
+      "noHit",
+      "noHit",
+      "noHit",
+      "noHit",
+      "noHit",
+      "noHit",
+      "noHit",
       "PatrolBoat",
       "PatrolBoat",
     ]);
@@ -96,7 +96,7 @@ test("can't shot at the coordinate that is already shot", () => {
   );
 });
 
-test("Sends the hit function to the correctship", () => {
+test("Mark hit on the gameboard and sends the hit function to the correctship", () => {
   const myGameboard = Gameboard();
   const PatrolBoat = Ship("PatrolBoat");
   myGameboard.placeShip(PatrolBoat, 2, "f");
@@ -107,6 +107,19 @@ test("Sends the hit function to the correctship", () => {
   myGameboard.placeShip(Carrier, 2, "b");
   myGameboard.receiveAttack(4, "b");
   expect(Carrier.getHits()).toEqual([false, false, true, false, false]);
+});
+
+test("Mark hit on the gameboard when there is a ship", () => {
+  const myGameboard = Gameboard();
+
+  const coordinates = myGameboard.getCoordinates();
+  myGameboard.placeShip(Ship("PatrolBoat"), 2, "f");
+  myGameboard.receiveAttack(2, "f");
+  expect(coordinates["f"][2]).toEqual("hit-PatrolBoat");
+
+  myGameboard.placeShip(Ship("Carrier"), 2, "b");
+  myGameboard.receiveAttack(4, "b");
+  expect(coordinates["b"][4]).toEqual("hit-Carrier");
 });
 
 test("Check if all ships are sunk", () => {

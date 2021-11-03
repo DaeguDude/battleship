@@ -1,5 +1,3 @@
-export type Hits = boolean[];
-
 export type ShipNames =
   | "Carrier"
   | "Battleship"
@@ -14,8 +12,10 @@ export interface Ship {
   length: number;
   hit: (hitLocation: number) => void;
   isSunk: () => boolean;
-  getHits: () => Hits;
+  getHits: () => PositionStatus[];
 }
+
+export type PositionStatus = "hit" | "missed" | "noHit";
 
 export interface Gameboard {
   placeShip: (
@@ -25,7 +25,7 @@ export interface Gameboard {
   ) => void;
   receiveAttack: (xCoord: XCoordinates, yCoord: YCoordinates) => void;
   areAllShipsSunk: () => boolean;
-  getCoordinates: () => any; // coordinates
+  // getCoordinates: () => any; // coordinates
 }
 
 export interface Coordinates {

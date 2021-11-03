@@ -1,19 +1,11 @@
 import { Ship } from "./Ship";
 
 describe("It returns all the public properties and methods", () => {
-  test("It has all the properties", () => {
-    const Carrier = Ship("Carrier");
-    expect(Carrier).toHaveProperty("length");
-    expect(Carrier).toHaveProperty("name");
-    expect(Carrier).toHaveProperty("hit");
-    expect(Carrier).toHaveProperty("isSunk");
-  });
-
-  test("It assigns the name well", () => {
+  test("Assigns the name properly", () => {
     expect(Ship("Destroyer")).toMatchObject({ name: "Destroyer" });
   });
 
-  test("It assigns the length well", () => {
+  test("Assigns the proper length for each ship", () => {
     expect(Ship("Carrier")).toMatchObject({ length: 5 });
     expect(Ship("Battleship")).toMatchObject({ length: 4 });
     expect(Ship("Destroyer")).toMatchObject({ length: 3 });
@@ -25,24 +17,33 @@ describe("It returns all the public properties and methods", () => {
 describe("hit function", () => {
   test("All the positions are hit correctly", () => {
     const Carrier = Ship("Carrier");
-    // Command - Create direct public side effects
     Carrier.hit(2);
-    // public side effects - Carrier.hits
-    expect(Carrier.getHits()).toEqual([false, false, true, false, false]);
+    expect(Carrier.getHits()).toEqual([
+      "noHit",
+      "noHit",
+      "hit",
+      "noHit",
+      "noHit",
+    ]);
 
     const Destroyer = Ship("Destroyer");
-    Destroyer.hit(2);
-    expect(Destroyer.getHits()).toEqual([false, false, true]);
+    Destroyer.hit(1);
+    expect(Destroyer.getHits()).toEqual(["noHit", "hit", "noHit"]);
   });
 
   test("Positions that are outside the range is not hit", () => {
-    const Carrier = Ship("Carrier");
-    const Battleship = Ship("Battleship");
-    const Destroyer = Ship("Destroyer");
+    const PatrolBoat = Ship("PatrolBoat");
+    PatrolBoat.hit(3);
+    expect(PatrolBoat.getHits()).toEqual(["noHit", "noHit"]);
 
-    expect(Carrier.getHits()).toEqual([false, false, false, false, false]);
-    expect(Battleship.getHits()).toEqual([false, false, false, false]);
-    expect(Destroyer.getHits()).toEqual([false, false, false]);
+    const Battleship = Ship("Battleship");
+    Battleship.hit(10);
+    expect(Battleship.getHits()).toStrictEqual([
+      "noHit",
+      "noHit",
+      "noHit",
+      "noHit",
+    ]);
   });
 });
 

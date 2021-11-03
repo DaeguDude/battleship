@@ -1,4 +1,4 @@
-import { Hits, Ship as ShipType, ShipNames } from "../types";
+import { PositionStatus, Ship as ShipType, ShipNames } from "../types";
 
 function Ship(name: ShipNames): ShipType {
   const length = getLengthForBoat(name);
@@ -6,25 +6,28 @@ function Ship(name: ShipNames): ShipType {
     throw new Error(`We don't have ${name} named boat`);
   }
 
-  let hits: Hits = new Array(length).fill(false);
+  let hits: PositionStatus[] = new Array(length).fill("noHit");
 
-  // Creates side effects - We can assert the public side effects
   const hit = (hitLocation: number) => {
+    if (hitLocation >= length) {
+      return "You cannot hit outside the range";
+    }
+
     hits = hitReducer(hits, hitLocation);
   };
 
-  // True pure function
-  const hitReducer = (hits: Hits, hitLocation: number) => {
+  const hitReducer = (hits: PositionStatus[], hitLocation: number) => {
     const newHits = [...hits];
-    newHits[hitLocation] = true;
+
+    newHits[hitLocation] = "hit";
     return newHits;
   };
 
   const isSunk = (): boolean => {
-    return hits.every((position) => position === true);
+    return hits.every((position) => position === "hit");
   };
 
-  const getHits = (): Hits => {
+  const getHits = (): PositionStatus[] => {
     return hits;
   };
 

@@ -1,63 +1,28 @@
 import { Gameboard } from "./Gameboard";
 import { Ship } from "../Ship/Ship";
 
-describe("Creates 10 x 10 coordinates", () => {
-  test("10 x 10 coordinates created correctly", () => {
-    const myGameboard = Gameboard();
-    const arrWithNoHit = Array(10).fill("noHit");
-
-    expect(myGameboard.getCoordinates()["a"]).toEqual(arrWithNoHit);
-    expect(myGameboard.getCoordinates()["f"]).toEqual(arrWithNoHit);
-    expect(myGameboard.getCoordinates()["j"]).toEqual(arrWithNoHit);
-    expect(myGameboard.getCoordinates()["k"]).toBeUndefined();
-    expect(myGameboard.getCoordinates()["m"]).toBeUndefined();
-    expect(myGameboard.getCoordinates()["z"]).toBeUndefined();
-  });
-});
-
 describe("PlaceShip", () => {
-  test("Placed the right ship", () => {
-    const myGameboard = Gameboard();
+  test.only("Placed the right ship", () => {
+    const myGameBoard = Gameboard();
+    myGameBoard.placeShip("PatrolBoat", "c", 2);
+    const patrolBoatLength = 2;
+    const coordinates = myGameBoard.getCoordinates();
+    const ThirdRow = coordinates[2];
 
-    myGameboard.placeShip(Ship("Carrier"), 5, "b");
-    expect(myGameboard.getCoordinates()["b"]).toEqual([
-      "noHit",
-      "noHit",
-      "noHit",
-      "noHit",
-      "noHit",
-      "Carrier",
-      "Carrier",
-      "Carrier",
-      "Carrier",
-      "Carrier",
-    ]);
-
-    myGameboard.placeShip(Ship("PatrolBoat"), 8, "j");
-    expect(myGameboard.getCoordinates()["j"]).toEqual([
-      "noHit",
-      "noHit",
-      "noHit",
-      "noHit",
-      "noHit",
-      "noHit",
-      "noHit",
-      "noHit",
+    expect(ThirdRow.slice(2, 2 + patrolBoatLength)).toEqual([
       "PatrolBoat",
       "PatrolBoat",
     ]);
   });
 
-  test("Coordinates exist, but not enough space", () => {
+  test.only("Coordinates exist, but not enough space", () => {
     const myGameBoard = Gameboard();
     expect(() => {
-      myGameBoard.placeShip(Ship("Carrier"), 6, "a");
+      myGameBoard.placeShip("PatrolBoat", "j", 0);
     }).toThrow("not enough space");
+
     expect(() => {
-      myGameBoard.placeShip(Ship("Battleship"), 7, "i");
-    }).toThrow("not enough space");
-    expect(() => {
-      myGameBoard.placeShip(Ship("Destroyer"), 8, "d");
+      myGameBoard.placeShip("Destroyer", "i", 0);
     }).toThrow("not enough space");
   });
 });

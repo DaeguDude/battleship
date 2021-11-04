@@ -5,43 +5,33 @@ export type ShipNames =
   | "Submarine"
   | "PatrolBoat";
 
-export type CellStatus = "noHit" | "missed" | ShipNames | `hit-${ShipNames}`;
-
 export interface Ship {
   name: ShipNames;
   length: number;
   hit: (hitLocation: number) => void;
   isSunk: () => boolean;
-  getHits: () => PositionStatus[];
+  getHits: () => ShipPositionStatus[];
 }
 
-export type PositionStatus = "hit" | "missed" | "noHit";
+export type ShipPositionStatus = "hit" | "missed" | "noHit";
 
 export interface Gameboard {
   placeShip: (
-    shipObj: Ship,
+    shipName: ShipNames,
     xCoord: XCoordinates,
     yCoord: YCoordinates
   ) => void;
-  receiveAttack: (xCoord: XCoordinates, yCoord: YCoordinates) => void;
-  areAllShipsSunk: () => boolean;
-  // getCoordinates: () => any; // coordinates
+  getCoordinates: () => Coordinates; // coordinates
+  // receiveAttack: (xCoord: XCoordinates, yCoord: YCoordinates) => void;
+  // areAllShipsSunk: () => boolean;
 }
 
-export interface Coordinates {
-  a: CellStatus[];
-  b: CellStatus[];
-  c: CellStatus[];
-  d: CellStatus[];
-  e: CellStatus[];
-  f: CellStatus[];
-  g: CellStatus[];
-  h: CellStatus[];
-  i: CellStatus[];
-  j: CellStatus[];
-}
+export type CellStatus = ShipPositionStatus | ShipNames;
 
-export type YCoordinates =
+export type Coordinates = CellStatus[][];
+// Coordinates is Array that contains an array which has elements of CellStatus
+
+export type XCoordinates =
   | "a"
   | "b"
   | "c"
@@ -52,4 +42,4 @@ export type YCoordinates =
   | "h"
   | "i"
   | "j";
-export type XCoordinates = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+export type YCoordinates = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;

@@ -10,5 +10,8 @@ module.exports = {
     sourceType: "module",
   },
   plugins: ["@typescript-eslint"],
-  rules: {},
+  rules: {
+    "prefer-const": "off",
+    "no-explicit-any": "off"
+  },
 };

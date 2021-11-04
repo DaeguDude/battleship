@@ -1,4 +1,4 @@
-import { PositionStatus, Ship as ShipType, ShipNames } from "../types";
+import { ShipPositionStatus, Ship as ShipType, ShipNames } from "../types";
 
 function Ship(name: ShipNames): ShipType {
   const length = getLengthForBoat(name);
@@ -6,7 +6,7 @@ function Ship(name: ShipNames): ShipType {
     throw new Error(`We don't have ${name} named boat`);
   }
 
-  let hits: PositionStatus[] = new Array(length).fill("noHit");
+  let hits: ShipPositionStatus[] = new Array(length).fill("noHit");
 
   const hit = (hitLocation: number) => {
     if (hitLocation >= length) {
@@ -16,7 +16,7 @@ function Ship(name: ShipNames): ShipType {
     hits = hitReducer(hits, hitLocation);
   };
 
-  const hitReducer = (hits: PositionStatus[], hitLocation: number) => {
+  const hitReducer = (hits: ShipPositionStatus[], hitLocation: number) => {
     const newHits = [...hits];
 
     newHits[hitLocation] = "hit";
@@ -27,7 +27,7 @@ function Ship(name: ShipNames): ShipType {
     return hits.every((position) => position === "hit");
   };
 
-  const getHits = (): PositionStatus[] => {
+  const getHits = (): ShipPositionStatus[] => {
     return hits;
   };
 

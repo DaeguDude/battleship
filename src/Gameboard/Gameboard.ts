@@ -5,10 +5,14 @@ import {
   YCoordinates,
   Gameboard as GameboardType,
   ShipNames,
+  CellStatus,
+  Ship as ShipType,
 } from "../types";
 
 function Gameboard(): GameboardType {
   let coordinates = getInitialCoordinates();
+  const ships: ShipType[] = [];
+
   const placeShip = (
     shipName: ShipNames,
     xCoord: XCoordinates,
@@ -23,50 +27,86 @@ function Gameboard(): GameboardType {
       throw new Error("not enough space");
     }
 
+    // mark the ship in the coordinate
     const row = coordinates[yCoord];
     for (let i = xCoordNumber; i < xCoordNumber + ship.length; i++) {
       row[i] = ship.name;
     }
+
+    // append the ship to the ships array
+    ships.push(ship);
   };
 
   const getCoordinates = () => {
     return coordinates;
   };
 
-  // const receiveAttack = (xCoord: XCoordinates, yCoord: YCoordinates) => {
-  //   if (
-  //     coordinates[yCoord][xCoord] === "missed" ||
-  //     coordinates[yCoord][xCoord].includes("hit")
-  //   ) {
-  //     return "This has been already shot";
-  //   }
+  const receiveAttack = (xCoord: XCoordinates, yCoord: YCoordinates) => {
+    const numXCoord = getXCoordNumber(xCoord);
+    const ships: ShipNames[] = [
+      "PatrolBoat",
+      "Carrier",
+      "Battleship",
+      "Destroyer",
+      "Submarine",
+    ];
 
-  //   if (coordinates[yCoord][xCoord] === "noHit") {
-  //     return updateCoordinates(coordinates, xCoord, yCoord, "missed");
-  //   }
+    console.log({ coordinates });
 
-  //   // hit it
-  //   // Mark as hit on the board
+    if (coordinates[yCoord][numXCoord] === "noHit") {
+      return (coordinates[yCoord][numXCoord] = "missed");
+    }
 
-  //   // Find a boat
-  //   const foundShip = shipList.find(
-  //     (ship) => ship.name === coordinates[yCoord][xCoord]
-  //   );
+    if (ships.includes(coordinates[yCoord][numXCoord])) {
+      // find ship name
+      const shipName = coordinates[yCoord][numXCoord];
+      const foundShip = getShip(shipName);
 
-  //   // Calculate which position of found boat to hit
-  //   const firstIndexShipOnCoordinate = coordinates[yCoord].findIndex(
-  //     (element: any) => element.includes(foundShip.name)
-  //   );
+      // How do I know which position to hit?
+      const firstIndexShipOnCoordinate = coordinates[yCoord].findIndex(
+        (element: CellStatus) => element === shipName
+      );
 
-  //   foundShip.hit(xCoord - firstIndexShipOnCoordinate);
-  //   coordinates[yCoord][xCoord] = `hit-${foundShip.name}`;
-  // };
+      foundShip.hit(getXCoordNumber(xCoord) - firstIndexShipOnCoordinate);
+
+      return (coordinates[yCoord][numXCoord] = "hit");
+    }
+
+    // if (
+    //   coordinates[yCoord][xCoord] === "missed" ||
+    //   coordinates[yCoord][xCoord].includes("hit")
+    // ) {
+    //   return "This has been already shot";
+    // }
+    // if (coordinates[yCoord][xCoord] === "noHit") {
+    //   return updateCoordinates(coordinates, xCoord, yCoord, "missed");
+    // }
+    // // hit it
+    // // Mark as hit on the board
+    // // Find a boat
+    // const foundShip = shipList.find(
+    //   (ship) => ship.name === coordinates[yCoord][xCoord]
+    // );
+  };
+
+  const getCoordinate = (
+    xCoord: XCoordinates,
+    yCoord: YCoordinates
+  ): CellStatus => {
+    const numXCoord = getXCoordNumber(xCoord);
+
+    return coordinates[yCoord][numXCoord];
+  };
+
+  const getShip = (shipName: ShipNames): ShipType => {
+    return ships.find((ship) => ship.name === shipName);
+  };
 
   // const areAllShipsSunk = () => {
   //   return shipList.every((ship) => ship.isSunk());
   // };
 
-  return { placeShip, getCoordinates };
+  return { placeShip, getCoordinates, receiveAttack, getCoordinate, getShip };
 }
 
 // const updateCoordinates = (

@@ -22,7 +22,9 @@ export interface Gameboard {
     yCoord: YCoordinates
   ) => void;
   getCoordinates: () => Coordinates; // coordinates
-  // receiveAttack: (xCoord: XCoordinates, yCoord: YCoordinates) => void;
+  receiveAttack: (xCoord: XCoordinates, yCoord: YCoordinates) => void;
+  getCoordinate: (xCoord: XCoordinates, yCoord: YCoordinates) => CellStatus;
+  getShip: (shipName: ShipNames) => Ship;
   // areAllShipsSunk: () => boolean;
 }
 

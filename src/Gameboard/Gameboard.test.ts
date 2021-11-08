@@ -1,5 +1,4 @@
 import { Gameboard } from "./Gameboard";
-import { Ship } from "../Ship/Ship";
 
 describe("PlaceShip", () => {
   test("Placed the right ship", () => {
@@ -28,12 +27,6 @@ describe("PlaceShip", () => {
 });
 
 describe("ReceiveAttack", () => {
-  // Takes a pair of coordinates
-
-  // determines whether or not the attack hit a ship and then sends the 'hit' function
-  // to the correct ship.
-
-  // Or records the coordinates of the missed shot
   test("mark missed shot", () => {
     const myGameBoard = Gameboard();
     myGameBoard.receiveAttack("b", 2);
@@ -55,45 +48,52 @@ describe("ReceiveAttack", () => {
     expect(myGameBoard.getCoordinate("d", 4)).toBe("hit");
   });
 
-  test.only("Check if it sends the hit function to the correct ship", () => {
+  test("Check if it sends the hit function to the correct ship", () => {
     const myGameBoard = Gameboard();
     myGameBoard.placeShip("PatrolBoat", "b", 0);
+    myGameBoard.receiveAttack("b", 0);
     myGameBoard.receiveAttack("c", 0);
 
     const patrolBoat = myGameBoard.getShip("PatrolBoat");
     const positions = patrolBoat.getHits();
+    console.log(positions);
+    expect(positions[0]).toBe("hit");
     expect(positions[1]).toBe("hit");
   });
 });
 
-test("Check if all ships are sunk", () => {
-  const myGameboard = Gameboard();
-  myGameboard.placeShip(Ship("Carrier"), 0, "a");
-  myGameboard.receiveAttack(0, "a");
-  myGameboard.receiveAttack(1, "a");
-  myGameboard.receiveAttack(2, "a");
-  myGameboard.receiveAttack(3, "a");
-  myGameboard.receiveAttack(4, "a");
+describe("AreAllShipsSunk", () => {
+  test("Check if all ships are sunk", () => {
+    const myGameboard = Gameboard();
+    myGameboard.placeShip("Carrier", "a", 0);
+    myGameboard.receiveAttack("a", 0);
+    myGameboard.receiveAttack("b", 0);
+    myGameboard.receiveAttack("c", 0);
+    myGameboard.receiveAttack("d", 0);
+    myGameboard.receiveAttack("e", 0);
 
-  myGameboard.placeShip(Ship("Battleship"), 0, "b");
-  myGameboard.receiveAttack(0, "b");
-  myGameboard.receiveAttack(1, "b");
-  myGameboard.receiveAttack(2, "b");
-  myGameboard.receiveAttack(3, "b");
+    myGameboard.placeShip("Battleship", "a", 1);
+    myGameboard.receiveAttack("a", 1);
+    myGameboard.receiveAttack("b", 1);
+    myGameboard.receiveAttack("c", 1);
+    myGameboard.receiveAttack("d", 1);
 
-  myGameboard.placeShip(Ship("Destroyer"), 0, "c");
-  myGameboard.receiveAttack(0, "c");
-  myGameboard.receiveAttack(1, "c");
-  myGameboard.receiveAttack(2, "c");
+    myGameboard.placeShip("Destroyer", "a", 2);
+    myGameboard.receiveAttack("a", 2);
+    myGameboard.receiveAttack("b", 2);
+    myGameboard.receiveAttack("c", 2);
 
-  myGameboard.placeShip(Ship("Submarine"), 0, "d");
-  myGameboard.receiveAttack(0, "d");
-  myGameboard.receiveAttack(1, "d");
-  myGameboard.receiveAttack(2, "d");
+    myGameboard.placeShip("Submarine", "a", 3);
+    myGameboard.receiveAttack("a", 3);
+    myGameboard.receiveAttack("b", 3);
+    myGameboard.receiveAttack("c", 3);
 
-  myGameboard.placeShip(Ship("PatrolBoat"), 0, "e");
-  myGameboard.receiveAttack(0, "e");
-  myGameboard.receiveAttack(1, "e");
+    myGameboard.placeShip("PatrolBoat", "a", 4);
+    myGameboard.receiveAttack("a", 4);
+    myGameboard.receiveAttack("b", 4);
 
-  expect(myGameboard.areAllShipsSunk()).toBe(true);
+    console.log(myGameboard.getCoordinates());
+
+    expect(myGameboard.areAllShipsSunk()).toBe(true);
+  });
 });

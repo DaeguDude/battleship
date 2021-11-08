@@ -25,7 +25,7 @@ export interface Gameboard {
   receiveAttack: (xCoord: XCoordinates, yCoord: YCoordinates) => void;
   getCoordinate: (xCoord: XCoordinates, yCoord: YCoordinates) => CellStatus;
   getShip: (shipName: ShipNames) => Ship;
-  // areAllShipsSunk: () => boolean;
+  areAllShipsSunk: () => boolean;
 }
 
 export type CellStatus = ShipPositionStatus | ShipNames;

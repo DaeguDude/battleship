@@ -11,6 +11,7 @@ import {
 
 function Gameboard(): GameboardType {
   let coordinates = getInitialCoordinates();
+  let shipCoordinatesInfo: any = {};
   const ships: ShipType[] = [];
 
   const placeShip = (
@@ -28,12 +29,14 @@ function Gameboard(): GameboardType {
     }
 
     // mark the ship in the coordinate
-    const row = coordinates[yCoord];
+    const newCoordinates = cloneDeep(coordinates);
+    const row = newCoordinates[yCoord];
     for (let i = xCoordNumber; i < xCoordNumber + ship.length; i++) {
       row[i] = ship.name;
     }
 
-    // append the ship to the ships array
+    setCoordinates(newCoordinates);
+    setShipCoordinatesInfo(ship.name, xCoord, yCoord);
     ships.push(ship);
   };
 
@@ -41,7 +44,23 @@ function Gameboard(): GameboardType {
     return coordinates;
   };
 
+  const setShipCoordinatesInfo = (
+    shipName: ShipNames,
+    xCoord: XCoordinates,
+    yCoord: YCoordinates
+  ) => {
+    shipCoordinatesInfo = Object.assign(
+      {},
+      { [shipName]: { x: xCoord, y: yCoord } }
+    );
+  };
+
+  const setCoordinates = (newCoordinates: Coordinates) => {
+    coordinates = cloneDeep(newCoordinates);
+  };
+
   const receiveAttack = (xCoord: XCoordinates, yCoord: YCoordinates) => {
+    const newCoordinates = cloneDeep(coordinates);
     const numXCoord = getXCoordNumber(xCoord);
     const ships: ShipNames[] = [
       "PatrolBoat",
@@ -51,42 +70,22 @@ function Gameboard(): GameboardType {
       "Submarine",
     ];
 
-    console.log({ coordinates });
-
-    if (coordinates[yCoord][numXCoord] === "noHit") {
-      return (coordinates[yCoord][numXCoord] = "missed");
+    if (newCoordinates[yCoord][numXCoord] === "noHit") {
+      newCoordinates[yCoord][numXCoord] = "missed";
+      return setCoordinates(newCoordinates);
     }
 
-    if (ships.includes(coordinates[yCoord][numXCoord])) {
-      // find ship name
-      const shipName = coordinates[yCoord][numXCoord];
+    if (ships.includes(newCoordinates[yCoord][numXCoord])) {
+      const shipName = newCoordinates[yCoord][numXCoord];
       const foundShip = getShip(shipName);
 
-      // How do I know which position to hit?
-      const firstIndexShipOnCoordinate = coordinates[yCoord].findIndex(
-        (element: CellStatus) => element === shipName
-      );
+      const xCoordOfTheShip = shipCoordinatesInfo[shipName]["x"];
 
-      foundShip.hit(getXCoordNumber(xCoord) - firstIndexShipOnCoordinate);
+      foundShip.hit(getXCoordNumber(xCoord) - getXCoordNumber(xCoordOfTheShip));
+      newCoordinates[yCoord][numXCoord] = "hit";
 
-      return (coordinates[yCoord][numXCoord] = "hit");
+      return setCoordinates(newCoordinates);
     }
-
-    // if (
-    //   coordinates[yCoord][xCoord] === "missed" ||
-    //   coordinates[yCoord][xCoord].includes("hit")
-    // ) {
-    //   return "This has been already shot";
-    // }
-    // if (coordinates[yCoord][xCoord] === "noHit") {
-    //   return updateCoordinates(coordinates, xCoord, yCoord, "missed");
-    // }
-    // // hit it
-    // // Mark as hit on the board
-    // // Find a boat
-    // const foundShip = shipList.find(
-    //   (ship) => ship.name === coordinates[yCoord][xCoord]
-    // );
   };
 
   const getCoordinate = (
@@ -102,11 +101,18 @@ function Gameboard(): GameboardType {
     return ships.find((ship) => ship.name === shipName);
   };
 
-  // const areAllShipsSunk = () => {
-  //   return shipList.every((ship) => ship.isSunk());
-  // };
+  const areAllShipsSunk = () => {
+    return ships.every((ship) => ship.isSunk());
+  };
 
-  return { placeShip, getCoordinates, receiveAttack, getCoordinate, getShip };
+  return {
+    placeShip,
+    getCoordinates,
+    receiveAttack,
+    getCoordinate,
+    getShip,
+    areAllShipsSunk,
+  };
 }
 
 // const updateCoordinates = (
@@ -119,6 +125,10 @@ function Gameboard(): GameboardType {
 //   newCoordinates[yCoord][xCoord] = value;
 //   return newCoordinates;
 // };
+
+function cloneDeep(x: any) {
+  return JSON.parse(JSON.stringify(x));
+}
 
 function checkForEnoughSpace(
   shipLength: number,

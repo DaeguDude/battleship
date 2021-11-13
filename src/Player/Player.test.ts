@@ -1,57 +1,71 @@
-import { Player } from "./Player";
 import { Gameboard } from "../Gameboard/Gameboard";
-import { Ship } from "../Ship/Ship";
-import { XCoordinates, YCoordinates } from "../types";
+import { Player } from "./Player";
+import { HitCoordinates } from "../types";
 
+// When creating a player instance, you should
+// pass the enemyboard reference. So I do not have to
+// pass enemyboard everytime it hits something
 describe("Player", () => {
-  test("check if it hits", () => {
-    const newPlayer = Player("Daegudude");
-    const gameBoard = Gameboard();
-    gameBoard.placeShip(Ship("Battleship"), 3, "b");
+  // Player can hit the enemy gameboard
+  test("Player misses the shot", () => {
+    const enemyBoard = Gameboard();
+    const player = Player("Sanghak", enemyBoard);
 
-    newPlayer.hit(gameBoard, 3, "a");
-    expect(gameBoard.getCoordinates()["a"][3]).toBe("missed");
+    const coordinates: HitCoordinates = {
+      x: "c",
+      y: 3,
+    };
 
-    newPlayer.hit(gameBoard, 3, "b");
-    expect(gameBoard.getCoordinates()["b"][3]).toBe("hit-Battleship");
+    player.hit(coordinates);
+
+    expect(enemyBoard.getCoordinate("c", 3)).toBe("missed");
+  });
+
+  test("Player hits the ship", () => {
+    const enemyBoard = Gameboard();
+
+    const player = Player("Sanghak", enemyBoard);
+
+    const coordinates: HitCoordinates = {
+      x: "c",
+      y: 3,
+    };
+
+    enemyBoard.placeShip("Battleship", coordinates.x, coordinates.y);
+    player.hit(coordinates);
+    expect(enemyBoard.getCoordinate("c", 3)).toBe("hit");
   });
 });
 
-describe("Computer Player", () => {
-  const yCoords: YCoordinates[] = [
-    "a",
-    "b",
-    "c",
-    "d",
-    "e",
-    "f",
-    "g",
-    "h",
-    "i",
-    "j",
-  ];
-  test("Can make a random hit", () => {
-    const newPlayer = Player("computer");
-    const gameBoard = Gameboard();
+describe("computer player", () => {
+  test.only("computer misses the shot", () => {
+    const enemyBoard = Gameboard();
+    const player = Player("computer", enemyBoard);
 
-    newPlayer.hit(gameBoard);
-    newPlayer.hit(gameBoard);
-    newPlayer.hit(gameBoard);
-    newPlayer.hit(gameBoard);
-    newPlayer.hit(gameBoard);
-    // Iterate through the coordinates
-    // and check if it has number of hits.
-    let count = 0;
-    const coordinates = gameBoard.getCoordinates();
-    yCoords.forEach((yCoord) => {
-      for (let i = 0; i < 10; i++) {
-        // if it is...missed. count + 1
-        if (coordinates[yCoord][i] === "missed") {
-          count += 1;
-        }
+    // Computer made a random hit
+    player.hit();
+
+    // Some coordinate on the board was hit....
+    const coordinates = enemyBoard.getCoordinates();
+    console.log(coordinates);
+    console.log(coordinates.length);
+
+    // How do I test computer has hit some coordinate?
+    // For now... everything is 'noHit' when so when `hit` was called
+    // at least one coordinate is turned to 'missed'. Gotta find that
+
+    let hasMissed = false;
+    for (let i = 0; i < coordinates.length; i++) {
+      const row = coordinates[i];
+      console.log(`${i} row:`, row);
+      if (row.includes("missed")) {
+        hasMissed = true;
+        break;
       }
-    });
+    }
 
-    expect(count).toBe(5);
+    expect(hasMissed).toBe(true);
   });
+
+  // test("computer hits the ship", () => {});
 });

@@ -1,18 +1,29 @@
-import { Gameboard, XCoordinates, YCoordinates } from "../types";
+import {
+  HitCoordinates,
+  Player as PlayerType,
+  Gameboard as GameboardType,
+  XCoordinates,
+  YCoordinates,
+} from "../types";
 
-const Player = (name: string) => {
-  const hit = (
-    gameboard: Gameboard,
-    xCoord?: XCoordinates,
-    yCoord?: YCoordinates
-  ) => {
-    if (name === "computer") {
+export const Player = (name: string, enemyBoard: GameboardType): PlayerType => {
+  const _name = name;
+  const _enemyBoard = enemyBoard;
+
+  const hit = (coordinates?: HitCoordinates) => {
+    if (_name === "computer") {
       while (true) {
         const xCoord = getRandomXCoordinate();
         const yCoord = getRandomYCoordinate();
-        const specifiedCoordinate = gameboard.getCoordinates();
-        if (specifiedCoordinate !== "missed" || specifiedCoordinate !== "hit") {
-          gameboard.receiveAttack(xCoord, yCoord);
+
+        // Try to
+        const specifiedCoordinate = _enemyBoard.getCoordinate(xCoord, yCoord);
+
+        // 만약... 'missed'가 아니고 'hit'이 아닐시에만...break
+        if (specifiedCoordinate !== "missed" && specifiedCoordinate !== "hit") {
+          _enemyBoard.receiveAttack(xCoord, yCoord);
+
+          // const attackedCoordinate = _enemyBoard.getCoordinate(xCoord, yCoord);
           break;
         }
       }
@@ -20,8 +31,12 @@ const Player = (name: string) => {
       return;
     }
 
-    gameboard.receiveAttack(xCoord, yCoord);
+    if (coordinates !== undefined) {
+      _enemyBoard.receiveAttack(coordinates.x, coordinates.y);
+    }
   };
+
+  return { name, hit };
 
   // const hitComputer = (gameboard: Gameboard) => {
   //   while (true) {
@@ -35,19 +50,17 @@ const Player = (name: string) => {
   //   }
   //   // Check if the specified board was hit or missed before
   // };
-
-  return { name, hit };
 };
 
-export { Player };
-
 function getRandomXCoordinate(): XCoordinates {
-  return getRandomIntInclusive(0, 9) as XCoordinates;
+  const xCoords = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
+  const randNum = getRandomIntInclusive(0, 9);
+
+  return xCoords[randNum] as XCoordinates;
 }
 
 function getRandomYCoordinate(): YCoordinates {
-  const yCoords = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
-  return yCoords[getRandomIntInclusive(0, yCoords.length - 1)] as YCoordinates;
+  return getRandomIntInclusive(0, 9) as YCoordinates;
 }
 
 function getRandomIntInclusive(min: number, max: number) {

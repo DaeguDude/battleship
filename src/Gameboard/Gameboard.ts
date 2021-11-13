@@ -168,10 +168,10 @@ function getXCoordNumber(xCoord: XCoordinates): number {
 }
 
 function getInitialCoordinates() {
-  const yCoords = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-  const result = yCoords.reduce((obj, cur) => {
-    return { ...obj, [cur]: new Array(10).fill("noHit") };
-  }, {} as Coordinates);
+  const result: Coordinates = [];
+  for (let i = 0; i < 10; i++) {
+    result.push(new Array(10).fill("noHit"));
+  }
 
   return result;
 }

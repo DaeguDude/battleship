@@ -22,8 +22,6 @@ export const Player = (name: string, enemyBoard: GameboardType): PlayerType => {
         // 만약... 'missed'가 아니고 'hit'이 아닐시에만...break
         if (specifiedCoordinate !== "missed" && specifiedCoordinate !== "hit") {
           _enemyBoard.receiveAttack(xCoord, yCoord);
-
-          // const attackedCoordinate = _enemyBoard.getCoordinate(xCoord, yCoord);
           break;
         }
       }
@@ -32,24 +30,11 @@ export const Player = (name: string, enemyBoard: GameboardType): PlayerType => {
     }
 
     if (coordinates !== undefined) {
-      _enemyBoard.receiveAttack(coordinates.x, coordinates.y);
+      return _enemyBoard.receiveAttack(coordinates.x, coordinates.y);
     }
   };
 
   return { name, hit };
-
-  // const hitComputer = (gameboard: Gameboard) => {
-  //   while (true) {
-  //     const xCoord = getRandomXCoordinate();
-  //     const yCoord = getRandomYCoordinate();
-  //     const specifiedCoordinate = gameboard.getCoordinates();
-  //     if (specifiedCoordinate !== "missed" || specifiedCoordinate !== "hit") {
-  //       gameboard.receiveAttack(xCoord, yCoord);
-  //       break;
-  //     }
-  //   }
-  //   // Check if the specified board was hit or missed before
-  // };
 };
 
 function getRandomXCoordinate(): XCoordinates {

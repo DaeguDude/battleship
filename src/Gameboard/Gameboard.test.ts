@@ -56,7 +56,6 @@ describe("ReceiveAttack", () => {
 
     const patrolBoat = myGameBoard.getShip("PatrolBoat");
     const positions = patrolBoat.getHits();
-    console.log(positions);
     expect(positions[0]).toBe("hit");
     expect(positions[1]).toBe("hit");
   });
@@ -91,8 +90,6 @@ describe("AreAllShipsSunk", () => {
     myGameboard.placeShip("PatrolBoat", "a", 4);
     myGameboard.receiveAttack("a", 4);
     myGameboard.receiveAttack("b", 4);
-
-    console.log(myGameboard.getCoordinates());
 
     expect(myGameboard.areAllShipsSunk()).toBe(true);
   });

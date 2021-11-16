@@ -40,3 +40,13 @@
   height: 30px;
   border: 1px solid black;
 }
+
+.hit {
+  background: blue;
+}
+
+.missed {
+  background: red;
+}
+.noHit {
+}

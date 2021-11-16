@@ -14,4 +14,9 @@ export class Model {
 
     // this.user = Player("DGDude", userBoard);
   }
+
+  clickCoordinate(event: any) {
+    console.log(event);
+    console.log("Model is responding...I should update something here");
+  }
 }

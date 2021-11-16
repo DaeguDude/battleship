@@ -1,6 +1,5 @@
 // Manipulating the DOM
 import { Gameboard } from "../types";
-import { GameboardDisplay } from "./GameboardDisplay";
 
 export class View {
   app: any;
@@ -11,13 +10,7 @@ export class View {
   constructor() {
     // Set up all the things you need in your view
     this.app = this.getElement(".app");
-
     this.container = this.createElement("div", "container");
-
-    this.userBoard = GameboardDisplay();
-    this.computerBoard = GameboardDisplay();
-
-    this.container.append(this.userBoard, this.computerBoard);
     this.app.append(this.container);
   }
 
@@ -45,7 +38,6 @@ export class View {
   }
 
   displayBoard(gameboard: Gameboard) {
-    // 으흠...
     const coordinates = gameboard.getCoordinates();
     const board = this.createElement("div", "board");
 
@@ -68,5 +60,22 @@ export class View {
     });
 
     this.container.append(board);
+  }
+
+  bindClickCoordinate(handler: (event: any) => void) {
+    const userBoard = this.getElement(".board");
+    const rows = userBoard.children;
+
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      const cells = row.children;
+
+      for (let j = 0; j < cells.length; j++) {
+        const cell = cells[j];
+        cell.addEventListener("click", (event: any) => {
+          handler(event);
+        });
+      }
+    }
   }
 }

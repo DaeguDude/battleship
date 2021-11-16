@@ -1,6 +1,7 @@
 const path = require("path");
 
 module.exports = {
+  mode: "development",
   entry: "./src/index.ts",
   module: {
     rules: [
@@ -9,15 +10,19 @@ module.exports = {
         use: "ts-loader",
         exclude: /node_modules/,
       },
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
+      },
     ],
   },
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
   },
-  mode: "development",
+  // sorucemap
   devtool: "inline-source-map",
   devServer: {
-    contentBase: "./dist",
+    static: "./dist",
   },
   output: {
     filename: "main.js",

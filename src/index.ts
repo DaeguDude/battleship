@@ -1,12 +1,11 @@
-import * as _ from "lodash";
-import { Gameboard } from "./Gameboard/Gameboard";
+import { Controller } from "./controller/controller";
+import { Model } from "./model/model";
+import { View } from "./view/view";
 
-function component() {
-  const element = document.createElement("div");
+// import { game } from "./game";
+import "./style/style.css";
 
-  element.innerHTML = _.join(["Hello", "ts webpack!"], " ");
+// game();
 
-  return element;
-}
-
-document.body.appendChild(component());
+const app = new Controller(new Model(), new View());
+console.log(app);

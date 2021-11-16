@@ -13,6 +13,7 @@ module.exports = {
   rules: {
     "prefer-const": "off",
     "@typescript-eslint/no-explicit-any": "off",
-    "no-constant-condition": "off"
+    "no-constant-condition": "off",
+    "@typescript-eslint/no-empty-function": "off"
   },
 };

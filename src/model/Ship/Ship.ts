@@ -1,4 +1,4 @@
-import { ShipPositionStatus, Ship as ShipType, ShipNames } from "../types";
+import { ShipPositionStatus, Ship as ShipType, ShipNames } from "../../types";
 
 function Ship(name: ShipNames): ShipType {
   const length = getLengthForBoat(name);

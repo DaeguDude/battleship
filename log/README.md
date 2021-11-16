@@ -30,3 +30,13 @@ console.log(arr);
 
 So they serialize to the same string, but they are not equal.
 Also another helpful [github issues](https://github.com/facebook/jest/issues/8475#issuecomment-495943549) related to this
+
+## 11/15
+
+Error was occured during executing `npm run build` and `npm run start` after upgrading `webpack`, `webpack-cli`, `webpack-dev-server`.
+
+I was able to resolve them all by removing `node_modules` folder and re-installing them.
+
+BUT...WHY?
+
+https://stackoverflow.com/questions/9023672/how-do-i-resolve-cannot-find-module-error-using-node-js

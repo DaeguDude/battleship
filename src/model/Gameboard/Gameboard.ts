@@ -7,7 +7,7 @@ import {
   ShipNames,
   CellStatus,
   Ship as ShipType,
-} from "../types";
+} from "../../types";
 
 function Gameboard(): GameboardType {
   let coordinates = getInitialCoordinates();

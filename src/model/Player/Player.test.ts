@@ -1,6 +1,6 @@
 import { Gameboard } from "../Gameboard/Gameboard";
 import { Player } from "./Player";
-import { HitCoordinates } from "../types";
+import { HitCoordinates } from "../../types";
 
 // When creating a player instance, you should
 // pass the enemyboard reference. So I do not have to

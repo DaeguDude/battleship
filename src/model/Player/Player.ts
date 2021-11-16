@@ -4,7 +4,7 @@ import {
   Gameboard as GameboardType,
   XCoordinates,
   YCoordinates,
-} from "../types";
+} from "../../types";
 
 export const Player = (name: string, enemyBoard: GameboardType): PlayerType => {
   const _name = name;

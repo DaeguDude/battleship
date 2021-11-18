@@ -6,12 +6,14 @@ export class View {
   userBoard: any;
   computerBoard: any;
   container: any;
+  onGameboardUpdated: any;
 
   constructor() {
     // Set up all the things you need in your view
     this.app = this.getElement(".app");
     this.container = this.createElement("div", "container");
     this.app.append(this.container);
+    this.onGameboardUpdated;
   }
 
   // Create an element with an optional CSS class
@@ -38,12 +40,14 @@ export class View {
   }
 
   displayBoard(gameboard: Gameboard) {
+    this.clearBoard();
+
     const coordinates = gameboard.getCoordinates();
     const board = this.createElement("div", "board");
 
-    coordinates.forEach((eachRow) => {
+    coordinates.forEach((eachRow, rowIndex) => {
       const row = this.createElement("div", "row");
-      eachRow.forEach((cell) => {
+      eachRow.forEach((cell, cellIndex) => {
         let className: string;
         if (cell === "hit") {
           className = "hit";
@@ -53,6 +57,9 @@ export class View {
           className = "noHit";
         }
         const dCell = this.createElement("div", ["cell", className]);
+        dCell.dataset.xCoord = getXCoordChar(cellIndex);
+        dCell.dataset.yCoord = String(rowIndex);
+
         row.appendChild(dCell);
       });
 
@@ -60,6 +67,14 @@ export class View {
     });
 
     this.container.append(board);
+
+    this.onGameboardUpdated();
+  }
+
+  clearBoard() {
+    while (this.container.firstChild) {
+      this.container.removeChild(this.container.firstChild);
+    }
   }
 
   bindClickCoordinate(handler: (event: any) => void) {
@@ -77,5 +92,34 @@ export class View {
         });
       }
     }
+  }
+
+  bindGameboardUpdated(callback: any) {
+    this.onGameboardUpdated = callback;
+  }
+}
+
+function getXCoordChar(num: number): string {
+  switch (num) {
+    case 0:
+      return "a";
+    case 1:
+      return "b";
+    case 2:
+      return "c";
+    case 3:
+      return "d";
+    case 4:
+      return "e";
+    case 5:
+      return "f";
+    case 6:
+      return "g";
+    case 7:
+      return "h";
+    case 8:
+      return "i";
+    case 9:
+      return "j";
   }
 }

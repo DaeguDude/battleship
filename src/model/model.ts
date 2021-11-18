@@ -7,16 +7,26 @@ import { Gameboard } from "./Gameboard/Gameboard";
 export class Model {
   userBoard: IGameboard;
   computerBoard: IGameboard;
+  onGameboardChanged: any;
 
   constructor() {
     this.userBoard = Gameboard();
     this.computerBoard = Gameboard();
+    this.onGameboardChanged;
 
     // this.user = Player("DGDude", userBoard);
   }
 
-  clickCoordinate(event: any) {
-    console.log(event);
-    console.log("Model is responding...I should update something here");
+  bindGameboardChanged(callback: any) {
+    this.onGameboardChanged = callback;
+  }
+
+  clickCoordinate(e: any) {
+    const x = e.currentTarget.dataset.xCoord;
+    const y = e.currentTarget.dataset.yCoord;
+
+    this.userBoard.receiveAttack(x, y);
+
+    this.onGameboardChanged(this.userBoard);
   }
 }

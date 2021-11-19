@@ -34,12 +34,15 @@ export class Controller {
     this.model.bindGameboardChanged(this.onGameboardChanged);
     this.view.bindGameboardUpdated(this.onGameboardUpdated);
 
-    this.onGameboardChanged(this.model.userBoard);
-    this.view.bindClickCoordinate(this.handleClickCoordinate);
+    this.onGameboardChanged(this.model.userBoard, "user");
+    this.view.bindClickCoordinate("user", this.handleClickCoordinate);
+
+    this.onGameboardChanged(this.model.computerBoard, "computer");
+    this.view.bindClickCoordinate("computer", this.handleClickCoordinate);
   }
 
-  onGameboardChanged = (gameboard: Gameboard) => {
-    this.view.displayBoard(gameboard);
+  onGameboardChanged = (gameboard: Gameboard, player: "user" | "computer") => {
+    this.view.displayBoard(gameboard, player);
   };
 
   onGameboardUpdated = () => {
@@ -49,7 +52,7 @@ export class Controller {
   // When click on the coordinate...
 
   // event handler..
-  handleClickCoordinate = (e: any) => {
-    this.model.clickCoordinate(e);
+  handleClickCoordinate = (e: any, player: "user" | "computer") => {
+    this.model.clickCoordinate(e, player);
   };
 }

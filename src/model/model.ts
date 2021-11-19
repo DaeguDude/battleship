@@ -21,12 +21,20 @@ export class Model {
     this.onGameboardChanged = callback;
   }
 
-  clickCoordinate(e: any) {
+  clickCoordinate(e: any, player: "user" | "computer") {
     const x = e.currentTarget.dataset.xCoord;
     const y = e.currentTarget.dataset.yCoord;
 
-    this.userBoard.receiveAttack(x, y);
+    if (player === "user") {
+      this.userBoard.receiveAttack(x, y);
+    }
 
-    this.onGameboardChanged(this.userBoard);
+    if (player === "computer") {
+      this.computerBoard.receiveAttack(x, y);
+    }
+
+    player === "user"
+      ? this.onGameboardChanged(this.userBoard, player)
+      : this.onGameboardChanged(this.computerBoard, player);
   }
 }

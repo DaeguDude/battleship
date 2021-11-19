@@ -7,5 +7,4 @@ import "./style/style.css";
 
 // game();
 
-const app = new Controller(new Model(), new View());
-console.log(app);
+new Controller(new Model(), new View());

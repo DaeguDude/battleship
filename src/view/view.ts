@@ -1,5 +1,6 @@
 // Manipulating the DOM
-import { Gameboard } from "../types";
+import { CellStatus, Gameboard } from "../types";
+import { getXCoordChar } from "../utils/getXCoordChar";
 
 export class View {
   app: any;
@@ -9,14 +10,12 @@ export class View {
   onGameboardUpdated: any;
 
   constructor() {
-    // Set up all the things you need in your view
     this.app = this.getElement(".app");
     this.container = this.createElement("div", "container");
     this.app.append(this.container);
     this.onGameboardUpdated;
   }
 
-  // Create an element with an optional CSS class
   createElement(tag: string, className?: string | string[]) {
     const element = document.createElement(tag);
 
@@ -39,24 +38,68 @@ export class View {
     return element;
   }
 
-  displayBoard(gameboard: Gameboard) {
-    this.clearBoard();
-
+  displayBoard(gameboard: Gameboard, player: "user" | "computer") {
     const coordinates = gameboard.getCoordinates();
+
+    if (!this.getElement("#user") || !this.getElement("#computer")) {
+      const newDisplayBoard = this.createNewDisplayBoard(player, gameboard);
+      this.container.append(newDisplayBoard);
+    }
+
+    // There is already board present
+    const board = this.getElement(`#${player}`);
+    coordinates.forEach((eachRow, rowIndex) => {
+      const dRow = board.children[rowIndex];
+      eachRow.forEach((cell, cellIndex) => {
+        const dCell = dRow.children[cellIndex];
+        dCell.className = getClassNameForCell(cell);
+      });
+    });
+  }
+
+  clearBoard() {
+    while (this.container.firstChild) {
+      this.container.removeChild(this.container.firstChild);
+    }
+  }
+
+  bindClickCoordinate(
+    player: "user" | "computer",
+    handler: (event: any, player: "user" | "computer") => void
+  ) {
+    const board = this.getElement(`#${player}`);
+    const rows = board.children;
+
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      const cells = row.children;
+
+      for (let j = 0; j < cells.length; j++) {
+        const cell = cells[j];
+        cell.addEventListener("click", (event: any) => {
+          handler(event, player);
+        });
+      }
+    }
+  }
+
+  bindGameboardUpdated(callback: any) {
+    this.onGameboardUpdated = callback;
+  }
+
+  createNewDisplayBoard(player: "user" | "computer", gameboard: Gameboard) {
+    const coordinates = gameboard.getCoordinates();
+
     const board = this.createElement("div", "board");
+    player === "user"
+      ? board.setAttribute("id", "user")
+      : board.setAttribute("id", "computer");
 
     coordinates.forEach((eachRow, rowIndex) => {
       const row = this.createElement("div", "row");
       eachRow.forEach((cell, cellIndex) => {
-        let className: string;
-        if (cell === "hit") {
-          className = "hit";
-        } else if (cell === "missed") {
-          className = "missed";
-        } else if (cell === "noHit") {
-          className = "noHit";
-        }
-        const dCell = this.createElement("div", ["cell", className]);
+        const dCell = this.createElement("div");
+        dCell.className = getClassNameForCell(cell);
         dCell.dataset.xCoord = getXCoordChar(cellIndex);
         dCell.dataset.yCoord = String(rowIndex);
 
@@ -66,60 +109,19 @@ export class View {
       board.appendChild(row);
     });
 
-    this.container.append(board);
-
-    this.onGameboardUpdated();
-  }
-
-  clearBoard() {
-    while (this.container.firstChild) {
-      this.container.removeChild(this.container.firstChild);
-    }
-  }
-
-  bindClickCoordinate(handler: (event: any) => void) {
-    const userBoard = this.getElement(".board");
-    const rows = userBoard.children;
-
-    for (let i = 0; i < rows.length; i++) {
-      const row = rows[i];
-      const cells = row.children;
-
-      for (let j = 0; j < cells.length; j++) {
-        const cell = cells[j];
-        cell.addEventListener("click", (event: any) => {
-          handler(event);
-        });
-      }
-    }
-  }
-
-  bindGameboardUpdated(callback: any) {
-    this.onGameboardUpdated = callback;
+    return board;
   }
 }
 
-function getXCoordChar(num: number): string {
-  switch (num) {
-    case 0:
-      return "a";
-    case 1:
-      return "b";
-    case 2:
-      return "c";
-    case 3:
-      return "d";
-    case 4:
-      return "e";
-    case 5:
-      return "f";
-    case 6:
-      return "g";
-    case 7:
-      return "h";
-    case 8:
-      return "i";
-    case 9:
-      return "j";
+function getClassNameForCell(cell: CellStatus) {
+  if (cell === "hit") {
+    return "cell hit";
+  }
+  if (cell === "missed") {
+    return "cell missed";
+  }
+
+  if (cell === "noHit") {
+    return "cell noHit";
   }
 }

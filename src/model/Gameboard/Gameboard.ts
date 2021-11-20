@@ -37,6 +37,7 @@ function Gameboard(): GameboardType {
     }
 
     setCoordinates(newCoordinates);
+
     setShipCoordinatesInfo(ship.name, xCoord, yCoord);
     ships.push(ship);
   };
@@ -50,10 +51,10 @@ function Gameboard(): GameboardType {
     xCoord: XCoordinates,
     yCoord: YCoordinates
   ) => {
-    shipCoordinatesInfo = Object.assign(
-      {},
-      { [shipName]: { x: xCoord, y: yCoord } }
-    );
+    shipCoordinatesInfo = {
+      ...shipCoordinatesInfo,
+      [shipName]: { x: xCoord, y: yCoord },
+    };
   };
 
   const setCoordinates = (newCoordinates: Coordinates) => {
@@ -61,6 +62,7 @@ function Gameboard(): GameboardType {
   };
 
   const receiveAttack = (xCoord: XCoordinates, yCoord: YCoordinates) => {
+    console.log("receiveAttack");
     const newCoordinates = cloneDeep(coordinates);
     const numXCoord = getXCoordNumber(xCoord);
     const ships: ShipNames[] = [

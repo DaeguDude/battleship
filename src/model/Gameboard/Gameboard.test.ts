@@ -24,6 +24,33 @@ describe("PlaceShip", () => {
       myGameBoard.placeShip("Destroyer", "i", 0);
     }).toThrow("not enough space");
   });
+
+  test("There is already a boat, can't place the ship", () => {
+    const myGameBoard = Gameboard();
+
+    myGameBoard.placeShip("PatrolBoat", "a", 0);
+    myGameBoard.placeShip("Submarine", "a", 0);
+    expect(myGameBoard.getCoordinate("a", 0)).toBe("PatrolBoat");
+
+    myGameBoard.placeShip("Destroyer", "b", 1);
+    myGameBoard.placeShip("Battleship", "b", 1);
+    expect(myGameBoard.getCoordinate("b", 1)).toBe("Destroyer");
+  });
+
+  test.only("Can't place the ship if some of coordinate overlaps ", () => {
+    const myGameBoard = Gameboard();
+
+    myGameBoard.placeShip("Destroyer", "a", 0);
+    myGameBoard.placeShip("Submarine", "c", 0);
+
+    expect(myGameBoard.getCoordinate("c", 0)).toBe("Destroyer");
+
+    expect(myGameBoard.getCoordinate("d", 0)).toBe("noHit");
+    expect(myGameBoard.getCoordinate("d", 0)).not.toBe("Submarine");
+
+    expect(myGameBoard.getCoordinate("d", 0)).toBe("noHit");
+    expect(myGameBoard.getCoordinate("e", 0)).not.toBe("Submarine");
+  });
 });
 
 describe("ReceiveAttack", () => {

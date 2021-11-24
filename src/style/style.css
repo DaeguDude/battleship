@@ -10,6 +10,13 @@
   background: gray;
 }
 
+.header {
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .container {
   padding: 4rem;
   width: 100%;
@@ -49,4 +56,49 @@
   background: red;
 }
 .noHit {
+}
+
+.Battleship {
+  background: rgb(67, 155, 33);
+}
+
+.Carrier {
+  background: rgb(67, 155, 33);
+}
+
+.Destroyer {
+  background: rgb(67, 155, 33);
+}
+
+.PatrolBoat {
+  background: rgb(67, 155, 33);
+}
+
+.Submarine {
+  background: rgb(67, 155, 33);
+}
+
+.ships-container {
+  height: 300px;
+  width: 300px;
+  background: orange;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.ship-row {
+  flex-grow: 1;
+
+  border: 1px solid black;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.ship-row .box {
+  flex-grow: 1;
+  border: 1px solid black;
 }

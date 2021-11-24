@@ -15,6 +15,14 @@ function Gameboard(): GameboardType {
   let shipCoordinatesInfo: any = {};
   const ships: ShipType[] = [];
 
+  // const shipNames: ShipNames[] = [
+  //   "PatrolBoat",
+  //   "Carrier",
+  //   "Battleship",
+  //   "Destroyer",
+  //   "Submarine",
+  // ];
+
   const placeShip = (
     shipName: ShipNames,
     xCoord: XCoordinates,
@@ -23,6 +31,15 @@ function Gameboard(): GameboardType {
     // Make a ship
     const ship = Ship(shipName);
     const xCoordNumber = getXCoordNumber(xCoord);
+
+    const specifiedCorodinate = getCoordinate(xCoord, yCoord);
+    if (
+      specifiedCorodinate !== "hit" &&
+      specifiedCorodinate !== "noHit" &&
+      specifiedCorodinate !== "missed"
+    ) {
+      return "There is already a ship";
+    }
 
     const hasEnoughSpace = checkForEnoughSpace(ship.length, xCoord);
     if (!hasEnoughSpace) {
@@ -62,7 +79,6 @@ function Gameboard(): GameboardType {
   };
 
   const receiveAttack = (xCoord: XCoordinates, yCoord: YCoordinates) => {
-    console.log("receiveAttack");
     const newCoordinates = cloneDeep(coordinates);
     const numXCoord = getXCoordNumber(xCoord);
     const ships: ShipNames[] = [

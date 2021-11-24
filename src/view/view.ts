@@ -1,19 +1,26 @@
 // Manipulating the DOM
+import { Gameboard as IGameboard } from "../types";
 import { CellStatus, Gameboard } from "../types";
 import { getXCoordChar } from "../utils/getXCoordChar";
 
 export class View {
-  app: any;
+  app: Element;
+  container: HTMLElement;
+  header: HTMLElement;
+  title: HTMLElement;
+  shipsContainer: HTMLElement;
   userBoard: any;
   computerBoard: any;
-  container: any;
   onGameboardUpdated: any;
 
   constructor() {
     this.app = this.getElement(".app");
+
+    this.header = this.createElement("header", "header");
+    this.title = this.createElement("h1", "title");
+    this.title.innerText = "BATTLESHIP";
     this.container = this.createElement("div", "container");
-    this.app.append(this.container);
-    this.onGameboardUpdated;
+    this.header.append(this.title);
   }
 
   createElement(tag: string, className?: string | string[]) {
@@ -36,6 +43,14 @@ export class View {
     const element = document.querySelector(selector);
 
     return element;
+  }
+
+  displayGameStartPage(boardOne: IGameboard) {
+    const boardToDisplay = this.createNewDisplayBoard("user", boardOne);
+    const shipsContainer = this.createShipsContainer();
+    this.container.append(boardToDisplay, shipsContainer);
+
+    this.app.append(this.header, this.container);
   }
 
   displayBoard(gameboard: Gameboard, player: "user" | "computer") {
@@ -65,7 +80,7 @@ export class View {
 
   bindClickCoordinate(
     player: "user" | "computer",
-    handler: (event: any, player: "user" | "computer") => void
+    handler: (event: any) => void
   ) {
     const board = this.getElement(`#${player}`);
     const rows = board.children;
@@ -76,8 +91,8 @@ export class View {
 
       for (let j = 0; j < cells.length; j++) {
         const cell = cells[j];
-        cell.addEventListener("click", (event: any) => {
-          handler(event, player);
+        cell.addEventListener("click", (e: any) => {
+          handler(e);
         });
       }
     }
@@ -111,9 +126,43 @@ export class View {
 
     return board;
   }
+
+  createShipsContainer() {
+    const container = this.createElement("div", "ships-container");
+    for (let i = 0; i < 5; i++) {
+      const shipRow = this.createElement("div", "ship-row");
+      for (let j = 0; j < 2; j++) {
+        // I need to create ship and attach here...
+      }
+
+      container.append(shipRow);
+    }
+
+    return container;
+  }
 }
 
 function getClassNameForCell(cell: CellStatus) {
+  if (cell === "Battleship") {
+    return "cell Battleship";
+  }
+
+  if (cell === "Carrier") {
+    return "cell Carrier";
+  }
+
+  if (cell === "Destroyer") {
+    return "cell Destroyer";
+  }
+
+  if (cell === "PatrolBoat") {
+    return "cell PatrolBoat";
+  }
+
+  if (cell === "Submarine") {
+    return "cell Submarine";
+  }
+
   if (cell === "hit") {
     return "cell hit";
   }

@@ -1,48 +1,74 @@
-// set up a new game by creating players and gameboard
-
-// import { Gameboard } from "./model/Gameboard/Gameboard";
-// import { Player } from "./model/Player/Player";
+import { Gameboard } from "./model/Gameboard/Gameboard";
+import { Player } from "./model/Player/Player";
 import "./style/style.css";
+import { Gameboard as IGameboard, Player as IPlayer } from "./types";
+import { View } from "./view/view";
 
-// loop
-// export function game() {
-//   populateDisplay();
+export class Game {
+  view: any;
+  user: IPlayer;
+  computer: IPlayer;
+  userBoard: IGameboard;
+  computerBoard: IGameboard;
+  currentPlayer: "user" | "computer";
 
-//   // // create 2 boards
-//   // const boardOne = Gameboard();
-//   // const boardTwo = Gameboard();
+  constructor() {
+    this.view = new View();
+    this.userBoard = Gameboard();
+    this.computerBoard = Gameboard();
+    this.user = Player("user", this.computerBoard);
+    this.computer = Player("computer", this.userBoard);
 
-//   // // create players
-//   // const humanPlayerName = prompt("Enter your name");
-//   // const humanPlayer = Player(humanPlayerName, boardOne);
-//   // const computerPlayer = Player("computer", boardTwo);
+    this.currentPlayer = "user";
 
-//   const boardDisplayOne = GameboardDisplay();
-//   const boardDisplayTwo = GameboardDisplay();
-//   const app = document.querySelector(".app");
-//   app.appendChild(boardDisplayOne);
-//   app.appendChild(boardDisplayTwo);
+    this.startGame();
+  }
 
-//   // populate gameboard with predetermined coordinates.
-// }
+  // It should alternate turn
+  changeTurn() {
+    if (this.currentPlayer === "user") {
+      return (this.currentPlayer = "computer");
+    }
 
-// export function populateDisplay() {
-//   const userName = getUserName();
+    return (this.currentPlayer = "user");
+  }
 
-//   const userBoard = document.createElement("div");
-//   userBoard.classList.add("player-name");
-//   userBoard.innerText = userName;
+  startGame() {
+    this.userBoard.placeShip("Battleship", "b", 0);
+    this.userBoard.placeShip("Carrier", "a", 1);
+    this.userBoard.placeShip("Destroyer", "e", 2);
+    this.userBoard.placeShip("PatrolBoat", "d", 3);
+    this.userBoard.placeShip("Submarine", "f", 4);
 
-//   const computerBoard = document.createElement("div");
-//   computerBoard.classList.add("player-name");
-//   computerBoard.innerText = "computer";
+    this.view.displayGameStartPage(this.userBoard);
 
-//   const app = document.querySelector(".app");
-//   app.appendChild(userBoard);
-//   app.appendChild(computerBoard);
-// }
+    this.computerBoard.placeShip("Destroyer", "a", 0);
+    this.computerBoard.placeShip("Submarine", "c", 1);
+    this.computerBoard.placeShip("Carrier", "b", 2);
+    this.computerBoard.placeShip("PatrolBoat", "a", 3);
+    this.computerBoard.placeShip("Battleship", "d", 4);
 
-// export function getUserName() {
-//   const userName = prompt("What is your name?");
-//   return userName;
-// }
+    this.view.displayBoard(this.computerBoard, "computer");
+    this.view.bindClickCoordinate("computer", this.handleReceiveAttack);
+  }
+
+  handleReceiveAttack = (e: any) => {
+    const x = e.currentTarget.dataset.xCoord;
+    const y = e.currentTarget.dataset.yCoord;
+
+    this.user.hit({ x, y });
+    this.view.displayBoard(this.computerBoard, "computer");
+
+    this.changeTurn();
+    this.computerHits();
+
+    // NOTE: There is a little bug, which is when I click on the coordinate that
+    // has been clicked, it still counts as an attack, and computer hits the coordinate
+    // of the userboard. It shouldn't hit the userBoard when attack was failure
+  };
+
+  computerHits = () => {
+    this.computer.hit();
+    this.view.displayBoard(this.userBoard, "user");
+  };
+}

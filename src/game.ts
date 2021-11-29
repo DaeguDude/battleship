@@ -56,15 +56,12 @@ export class Game {
     const x = e.currentTarget.dataset.xCoord;
     const y = e.currentTarget.dataset.yCoord;
 
-    this.user.hit({ x, y });
-    this.view.displayBoard(this.computerBoard, "computer");
-
-    this.changeTurn();
-    this.computerHits();
-
-    // NOTE: There is a little bug, which is when I click on the coordinate that
-    // has been clicked, it still counts as an attack, and computer hits the coordinate
-    // of the userboard. It shouldn't hit the userBoard when attack was failure
+    const hitResult = this.user.hit({ x, y });
+    if (hitResult === "success") {
+      this.view.displayBoard(this.computerBoard, "computer");
+      this.changeTurn();
+      this.computerHits();
+    }
   };
 
   computerHits = () => {

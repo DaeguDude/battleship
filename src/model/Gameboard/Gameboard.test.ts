@@ -37,7 +37,7 @@ describe("PlaceShip", () => {
     expect(myGameBoard.getCoordinate("b", 1)).toBe("Destroyer");
   });
 
-  test.only("Can't place the ship if some of coordinate overlaps ", () => {
+  test("Can't place the ship if some of coordinate overlaps ", () => {
     const myGameBoard = Gameboard();
 
     myGameBoard.placeShip("Destroyer", "a", 0);
@@ -85,6 +85,14 @@ describe("ReceiveAttack", () => {
     const positions = patrolBoat.getHits();
     expect(positions[0]).toBe("hit");
     expect(positions[1]).toBe("hit");
+  });
+
+  test("return 'failure' if specified coordinate was already shot", () => {
+    const myGameBoard = Gameboard();
+    myGameBoard.placeShip("PatrolBoat", "b", 0);
+
+    myGameBoard.receiveAttack("b", 0);
+    expect(myGameBoard.receiveAttack("b", 0)).toBe("failure");
   });
 });
 

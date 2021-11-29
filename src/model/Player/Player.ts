@@ -30,7 +30,12 @@ export const Player = (name: string, enemyBoard: GameboardType): PlayerType => {
     }
 
     if (coordinates !== undefined) {
-      return _enemyBoard.receiveAttack(coordinates.x, coordinates.y);
+      const hitResult = _enemyBoard.receiveAttack(coordinates.x, coordinates.y);
+      if (hitResult === "failure") {
+        return "failure";
+      }
+
+      return "success";
     }
   };
 

@@ -91,7 +91,8 @@ function Gameboard(): GameboardType {
 
     if (newCoordinates[yCoord][numXCoord] === "noHit") {
       newCoordinates[yCoord][numXCoord] = "missed";
-      return setCoordinates(newCoordinates);
+      setCoordinates(newCoordinates);
+      return "success";
     }
 
     if (ships.includes(newCoordinates[yCoord][numXCoord])) {
@@ -103,7 +104,15 @@ function Gameboard(): GameboardType {
       foundShip.hit(getXCoordNumber(xCoord) - getXCoordNumber(xCoordOfTheShip));
       newCoordinates[yCoord][numXCoord] = "hit";
 
-      return setCoordinates(newCoordinates);
+      setCoordinates(newCoordinates);
+      return "success";
+    }
+
+    if (
+      newCoordinates[yCoord][numXCoord] === "hit" ||
+      newCoordinates[yCoord][numXCoord] === "missed"
+    ) {
+      return "failure";
     }
   };
 

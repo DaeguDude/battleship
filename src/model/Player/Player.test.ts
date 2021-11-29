@@ -2,11 +2,7 @@ import { Gameboard } from "../Gameboard/Gameboard";
 import { Player } from "./Player";
 import { HitCoordinates } from "../../types";
 
-// When creating a player instance, you should
-// pass the enemyboard reference. So I do not have to
-// pass enemyboard everytime it hits something
 describe("Player", () => {
-  // Player can hit the enemy gameboard
   test("Player misses the shot", () => {
     const enemyBoard = Gameboard();
     const player = Player("Sanghak", enemyBoard);
@@ -23,7 +19,6 @@ describe("Player", () => {
 
   test("Player hits the ship", () => {
     const enemyBoard = Gameboard();
-
     const player = Player("Sanghak", enemyBoard);
 
     const coordinates: HitCoordinates = {
@@ -34,6 +29,23 @@ describe("Player", () => {
     enemyBoard.placeShip("Battleship", coordinates.x, coordinates.y);
     player.hit(coordinates);
     expect(enemyBoard.getCoordinate("c", 3)).toBe("hit");
+  });
+
+  test("return 'success' if hit was success", () => {
+    const enemyBoard = Gameboard();
+    enemyBoard.placeShip("Carrier", "c", 3);
+    const player = Player("Sanghak", enemyBoard);
+
+    expect(player.hit({ x: "c", y: 3 })).toBe("success");
+  });
+
+  test("return 'failure' if hit was failed", () => {
+    const enemyBoard = Gameboard();
+    enemyBoard.placeShip("Carrier", "c", 3);
+    const player = Player("Sanghak", enemyBoard);
+
+    player.hit({ x: "c", y: 3 });
+    expect(player.hit({ x: "c", y: 3 })).toBe("failure");
   });
 });
 
@@ -66,15 +78,10 @@ describe("computer player", () => {
     enemyBoard.placeShip("Carrier", "a", 3);
     enemyBoard.placeShip("Carrier", "a", 4);
 
-    // I am going to create a loop that will iterate
-    // for the length of row and columns
-    // So it is 10 x 10, i will loop for 100 times
     for (let i = 0; i < 100; i++) {
       player.hit();
     }
 
-    // So now I assume, every position was hit.
-    // So let me check the coordinate that ship was placed
     expect(enemyBoard.getCoordinate("a", 0)).toBe("hit");
     expect(enemyBoard.getCoordinate("a", 1)).toBe("hit");
     expect(enemyBoard.getCoordinate("a", 2)).toBe("hit");

@@ -22,7 +22,10 @@ export interface Gameboard {
     yCoord: YCoordinates
   ) => void;
   getCoordinates: () => Coordinates; // coordinates
-  receiveAttack: (xCoord: XCoordinates, yCoord: YCoordinates) => void;
+  receiveAttack: (
+    xCoord: XCoordinates,
+    yCoord: YCoordinates
+  ) => "success" | "failure";
   getCoordinate: (xCoord: XCoordinates, yCoord: YCoordinates) => CellStatus;
   getShip: (shipName: ShipNames) => Ship;
   areAllShipsSunk: () => boolean;
@@ -48,7 +51,7 @@ export type YCoordinates = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
 export type Player = {
   name: string;
-  hit: (coordinates?: HitCoordinates) => void;
+  hit: (coordinates?: HitCoordinates) => "success" | "failure";
 };
 
 export type HitCoordinates = {

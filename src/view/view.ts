@@ -15,6 +15,7 @@ export class View {
 
   constructor() {
     this.app = this.getElement(".app");
+    this.clearDisplay();
 
     this.header = this.createElement("header", "header");
     this.title = this.createElement("h1", "title");
@@ -72,9 +73,9 @@ export class View {
     });
   }
 
-  clearBoard() {
-    while (this.container.firstChild) {
-      this.container.removeChild(this.container.firstChild);
+  clearDisplay() {
+    while (this.app.firstChild) {
+      this.app.removeChild(this.app.firstChild);
     }
   }
 

@@ -59,9 +59,41 @@ export class Game {
     const hitResult = this.user.hit({ x, y });
     if (hitResult === "success") {
       this.view.displayBoard(this.computerBoard, "computer");
-      this.changeTurn();
-      this.computerHits();
+      const isComputerShipsAllSunk = this.checkAllShipsSunk(this.computerBoard);
+
+      if (isComputerShipsAllSunk) {
+        alert("user wins");
+        this.reset();
+      } else {
+        this.changeTurn();
+        this.computerHits();
+        const isUserShipsAllSunk = this.checkAllShipsSunk(this.userBoard);
+
+        if (isUserShipsAllSunk) {
+          alert("computer wins");
+          this.reset();
+        }
+      }
     }
+  };
+
+  checkAllShipsSunk = (gameBoard: IGameboard): boolean => {
+    if (gameBoard.areAllShipsSunk()) {
+      return true;
+    }
+
+    return false;
+  };
+
+  reset = () => {
+    this.view = new View();
+    this.userBoard = Gameboard();
+    this.computerBoard = Gameboard();
+    this.user = Player("user", this.computerBoard);
+    this.computer = Player("computer", this.userBoard);
+
+    this.currentPlayer = "user";
+    this.startGame();
   };
 
   computerHits = () => {

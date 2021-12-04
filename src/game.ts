@@ -4,6 +4,8 @@ import "./style/style.css";
 import { Gameboard as IGameboard, Player as IPlayer } from "./types";
 import { View } from "./view/view";
 
+// NOTE: It's time for me to let users place their ships using drag and drop api.
+// So I need to look into a drag and drop api
 export class Game {
   view: any;
   user: IPlayer;
@@ -19,9 +21,17 @@ export class Game {
     this.user = Player("user", this.computerBoard);
     this.computer = Player("computer", this.userBoard);
 
-    this.currentPlayer = "user";
+    this.userPlaceShips();
 
-    this.startGame();
+    this.currentPlayer = "user";
+    // this.startGame();
+  }
+
+  userPlaceShips() {
+    this.view.enablePlaceShips();
+    // User should be able to place ships now.
+    // How? With a click of mouse
+    // Okay. Then it should be some sort of event listeners?
   }
 
   // It should alternate turn

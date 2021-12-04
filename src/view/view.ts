@@ -54,6 +54,53 @@ export class View {
     this.app.append(this.header, this.container);
   }
 
+  enablePlaceShips() {
+    const userBoard = this.createEmptyDisplayBoard("user");
+    const appContainer = this.getElement(".app");
+
+    const rows = userBoard.children;
+    for (let i = 0; i < rows.length; i++) {
+      const cells = rows[i].children;
+      for (let j = 0; j < cells.length; j++) {
+        const cell = cells[j];
+        cell.addEventListener("mouseover", () => {
+          // I need some coding effect that can show it is being hovered
+          // I need to make it hoverable.
+        });
+      }
+    }
+
+    Array.from(userBoard.children);
+    console.log(userBoard.children);
+
+    appContainer.append(userBoard);
+
+    // Now I need to....enable place ships.
+    // Make this hoverable
+  }
+
+  createEmptyDisplayBoard(player: "user") {
+    const board = this.createElement("div", "board");
+    player === "user"
+      ? board.setAttribute("id", "user")
+      : board.setAttribute("id", "computer");
+
+    for (let i = 0; i < 10; i++) {
+      const row = this.createElement("div", "row");
+      for (let j = 0; j < 10; j++) {
+        const dCell = this.createElement("div");
+        dCell.className = getClassNameForCell("noHit");
+        dCell.dataset.xCoord = getXCoordChar(j);
+        dCell.dataset.yCoord = String(i);
+
+        row.appendChild(dCell);
+      }
+      board.appendChild(row);
+    }
+
+    return board;
+  }
+
   displayBoard(gameboard: Gameboard, player: "user" | "computer") {
     const coordinates = gameboard.getCoordinates();
 

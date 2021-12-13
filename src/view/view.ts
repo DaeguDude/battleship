@@ -1,7 +1,17 @@
 // Manipulating the DOM
-import { Gameboard as IGameboard } from "../types";
+import { checkForEnoughSpace } from "../model/Gameboard/Gameboard";
+import {
+  Coordinates,
+  Gameboard as IGameboard,
+  HitCoordinates,
+  ShipNames,
+  XCoordinates,
+  YCoordinates,
+} from "../types";
 import { CellStatus, Gameboard } from "../types";
 import { getXCoordChar } from "../utils/getXCoordChar";
+import { getXCoordNumber } from "../utils/getXCoordNumber";
+import { getBoardToDisplay } from "./utils";
 
 export class View {
   app: Element;
@@ -46,37 +56,164 @@ export class View {
     return element;
   }
 
+  showUserBoard(gameBoard: IGameboard) {
+    const userBoardUI = this.createDisplayBoard("user", gameBoard);
+    this.enablePlaceShips(userBoardUI, gameBoard.placeShip);
+    this.app.append(userBoardUI);
+  }
+
   displayGameStartPage(boardOne: IGameboard) {
-    const boardToDisplay = this.createNewDisplayBoard("user", boardOne);
+    const boardToDisplay = this.createDisplayBoard("user", boardOne);
     const shipsContainer = this.createShipsContainer();
     this.container.append(boardToDisplay, shipsContainer);
 
     this.app.append(this.header, this.container);
   }
 
-  enablePlaceShips() {
-    const userBoard = this.createEmptyDisplayBoard("user");
-    const appContainer = this.getElement(".app");
+  enablePlaceShips(
+    gameBoardUI: Element,
+    placeShip: (
+      shipName: ShipNames,
+      xCoord: XCoordinates,
+      yCoord: YCoordinates
+    ) => void
+  ) {
+    const ships: { name: ShipNames; length: number }[] = [
+      { name: "Carrier", length: 5 },
+      { name: "Battleship", length: 4 },
+      { name: "Destroyer", length: 3 },
+      { name: "Submarine", length: 3 },
+      { name: "PatrolBoat", length: 2 },
+    ];
+    let shipIndex = 0;
+    let currentShip = ships[shipIndex];
 
-    const rows = userBoard.children;
+    this.attachListenerToTheCell(
+      gameBoardUI,
+      "click",
+      function listenForPlaceShip(e: MouseEvent) {
+        const target = e.target as HTMLDivElement;
+        const coordinates: HitCoordinates = {
+          x: target.dataset.xCoord as XCoordinates,
+          y: Number(target.dataset.yCoord) as YCoordinates,
+        };
+
+        console.log(coordinates);
+        console.log("Get which ships to place");
+        console.log("place ships");
+
+        // click is not possible when there is no enough space
+      }
+    );
+
+    this.attachListenerToTheCell(
+      gameBoardUI,
+      "mouseenter",
+      // ShowWhetherValidateMove
+      (e: MouseEvent) => {
+        const target = e.target as HTMLDivElement;
+        const coordinates: HitCoordinates = {
+          x: target.dataset.xCoord as XCoordinates,
+          y: Number(target.dataset.yCoord) as YCoordinates,
+        };
+
+        const hasEnoughSpaceToPlaceShip = this.hasEnoughSpaceToPlaceShip(
+          currentShip,
+          coordinates
+        );
+
+        if (hasEnoughSpaceToPlaceShip) {
+          console.log("O - show blue color");
+        } else {
+          target.style.pointerEvents = "none";
+          target.style.background = "grey";
+          console.log("X - disable click, grey out them");
+        }
+      }
+    );
+
+    this.attachListenerToTheCell(gameBoardUI, "mouseleave", (e: MouseEvent) => {
+      // When it leaves...what do you do?
+    });
+  }
+
+  hasEnoughSpaceToPlaceShip(
+    ship: { name: ShipNames; length: number },
+    coordinates: HitCoordinates
+  ): boolean {
+    const LAST_X_INDEX = 9;
+
+    if (getXCoordNumber(coordinates.x) + (ship.length - 1) > LAST_X_INDEX) {
+      return false;
+    }
+
+    return true;
+  }
+
+  attachListenerToTheCell(
+    gameBoardUI: Element,
+    eventType: string,
+    callback: (e: MouseEvent) => void
+  ) {
+    const rows = gameBoardUI.children;
     for (let i = 0; i < rows.length; i++) {
       const cells = rows[i].children;
       for (let j = 0; j < cells.length; j++) {
         const cell = cells[j];
-        cell.addEventListener("mouseover", () => {
-          // I need some coding effect that can show it is being hovered
-          // I need to make it hoverable.
+        cell.addEventListener(eventType, callback);
+      }
+    }
+  }
+
+  attachPlaceShipListener(gameBoardUI: Element) {
+    const rows = gameBoardUI.children;
+
+    for (let i = 0; i < rows.length; i++) {
+      const cells = rows[i].children;
+      for (let j = 0; j < cells.length; j++) {
+        const cell = cells[j];
+        cell.addEventListener("mouseenter", (e: MouseEvent) => {
+          const cell = e.currentTarget as HTMLDivElement;
+          cell.style.background = "#9ac7ac";
+
+          // Check what ship is being placed...
+
+          // const shipInfo = getCurrentShipBeingPlaced(gameBoard);
+          const coordinates = {
+            x: cell.dataset.xCoord as XCoordinates,
+            y: Number(cell.dataset.yCoord) as YCoordinates,
+          };
+
+          // if (hasEnoughSpace(shipInfo, coordinates)) {
+          //   console.log("enough space");
+          // }
+
+          // // - If there is a ship, show disable hover
+          // // - If there is no enough space, show disable hover
+
+          // if (true) {
+          // }
+        });
+
+        cell.addEventListener("mouseleave", (e: MouseEvent) => {
+          const cell = e.currentTarget as HTMLDivElement;
+          cell.style.background = "none";
+        });
+
+        cell.addEventListener("click", (e: MouseEvent) => {
+          const cell = e.currentTarget as HTMLDivElement;
+          const coordinates = {
+            x: cell.dataset.xCoord as XCoordinates,
+            y: Number(cell.dataset.yCoord) as YCoordinates,
+          };
         });
       }
     }
+  }
 
-    Array.from(userBoard.children);
-    console.log(userBoard.children);
-
-    appContainer.append(userBoard);
-
-    // Now I need to....enable place ships.
-    // Make this hoverable
+  showBoard(gameBoardElem: Element) {
+    const board = this.getElement(".board");
+    board.parentNode.replaceChild(gameBoardElem, board);
   }
 
   createEmptyDisplayBoard(player: "user") {
@@ -105,7 +242,7 @@ export class View {
     const coordinates = gameboard.getCoordinates();
 
     if (!this.getElement("#user") || !this.getElement("#computer")) {
-      const newDisplayBoard = this.createNewDisplayBoard(player, gameboard);
+      const newDisplayBoard = this.createDisplayBoard(player, gameboard);
       this.container.append(newDisplayBoard);
     }
 
@@ -150,7 +287,7 @@ export class View {
     this.onGameboardUpdated = callback;
   }
 
-  createNewDisplayBoard(player: "user" | "computer", gameboard: Gameboard) {
+  createDisplayBoard(player: "user" | "computer", gameboard: Gameboard) {
     const coordinates = gameboard.getCoordinates();
 
     const board = this.createElement("div", "board");
@@ -190,7 +327,7 @@ export class View {
   }
 }
 
-function getClassNameForCell(cell: CellStatus) {
+export function getClassNameForCell(cell: CellStatus) {
   if (cell === "Battleship") {
     return "cell Battleship";
   }
@@ -222,3 +359,68 @@ function getClassNameForCell(cell: CellStatus) {
     return "cell noHit";
   }
 }
+
+interface IShipInfo {
+  name: ShipNames;
+  length: 2 | 3 | 4 | 5;
+}
+
+function getCurrentShipBeingPlaced(shipCounter: number): IShipInfo {
+  switch (shipCounter) {
+    case 0:
+      return { name: "Carrier", length: 5 };
+    case 1:
+      return { name: "Battleship", length: 4 };
+
+    case 2:
+      return { name: "Destroyer", length: 3 };
+
+    case 3:
+      return { name: "Submarine", length: 3 };
+
+    case 4:
+      return { name: "PatrolBoat", length: 2 };
+  }
+}
+
+function getCurrentShipBeingPlacedUI(gameBoardUI: Element) {
+  // No, no, no... I can just check coordinates from the gameBoard!
+}
+
+function hasEnoughSpace(shipInfo: IShipInfo, coordinates: HitCoordinates) {
+  if (checkForEnoughSpace(shipInfo.length, coordinates.x)) {
+    return true;
+  }
+
+  return false;
+}
+
+// NOTE: ONCE ship is placed, show the gameboard again.
+
+// switch (shipCounter) {
+//   case 0:
+//     gameBoard.placeShip("Carrier", coordinates.x, coordinates.y);
+//     this.showBoard(getBoardToDisplay(gameBoard));
+//     shipCounter++;
+//     break;
+//   case 1:
+//     gameBoard.placeShip("Battleship", coordinates.x, coordinates.y);
+//     this.showBoard(getBoardToDisplay(gameBoard));
+//     shipCounter++;
+//     break;
+//   case 2:
+//     gameBoard.placeShip("Destroyer", coordinates.x, coordinates.y);
+//     this.showBoard(getBoardToDisplay(gameBoard));
+//     shipCounter++;
+//     break;
+//   case 3:
+//     gameBoard.placeShip("PatrolBoat", coordinates.x, coordinates.y);
+//     this.showBoard(getBoardToDisplay(gameBoard));
+//     shipCounter++;
+//     break;
+//   case 4:
+//     gameBoard.placeShip("Submarine", coordinates.x, coordinates.y);
+//     this.showBoard(getBoardToDisplay(gameBoard));
+//     shipCounter++;
+//     break;
+// }

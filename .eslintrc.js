@@ -12,6 +12,7 @@ module.exports = {
   plugins: ["@typescript-eslint"],
   rules: {
     "prefer-const": "off",
+    "no-empty": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "no-constant-condition": "off",
     "@typescript-eslint/no-empty-function": "off"

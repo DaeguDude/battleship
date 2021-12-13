@@ -158,7 +158,7 @@ function cloneDeep(x: any) {
   return JSON.parse(JSON.stringify(x));
 }
 
-function checkForEnoughSpace(
+export function checkForEnoughSpace(
   shipLength: number,
   xCoord: XCoordinates
 ): boolean {

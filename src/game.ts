@@ -5,7 +5,7 @@ import { Gameboard as IGameboard, Player as IPlayer } from "./types";
 import { View } from "./view/view";
 
 export class Game {
-  view: any;
+  view: InstanceType<typeof View>;
   user: IPlayer;
   computer: IPlayer;
   userBoard: IGameboard;
@@ -32,7 +32,7 @@ export class Game {
 
   userPlaceShips() {
     // I should pass placeships of game.
-    this.view.enablePlaceShips(this.userBoard);
+    // this.view.enablePlaceShips(this.userBoard);
     // User should be able to place ships now.
     // How? With a click of mouse
     // Okay. Then it should be some sort of event listeners?

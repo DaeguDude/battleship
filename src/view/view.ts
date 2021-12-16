@@ -11,7 +11,6 @@ import {
 import { CellStatus, Gameboard } from "../types";
 import { getXCoordChar } from "../utils/getXCoordChar";
 import { getXCoordNumber } from "../utils/getXCoordNumber";
-import { getBoardToDisplay } from "./utils";
 
 export class View {
   app: Element;
@@ -19,9 +18,12 @@ export class View {
   header: HTMLElement;
   title: HTMLElement;
   shipsContainer: HTMLElement;
-  userBoard: any;
-  computerBoard: any;
+  userBoard: IGameboard;
+  computerBoard: IGameboard;
   onGameboardUpdated: any;
+  ships: { name: ShipNames; length: number }[];
+  shipIndex: number;
+  currentShip: { name: ShipNames; length: number };
 
   constructor() {
     this.app = this.getElement(".app");
@@ -32,6 +34,17 @@ export class View {
     this.title.innerText = "BATTLESHIP";
     this.container = this.createElement("div", "container");
     this.header.append(this.title);
+    this.userBoard;
+
+    this.ships = [
+      { name: "Carrier", length: 5 },
+      { name: "Battleship", length: 4 },
+      { name: "Destroyer", length: 3 },
+      { name: "Submarine", length: 3 },
+      { name: "PatrolBoat", length: 2 },
+    ];
+    this.shipIndex = 0;
+    this.currentShip = this.ships[this.shipIndex];
   }
 
   createElement(tag: string, className?: string | string[]) {
@@ -57,9 +70,23 @@ export class View {
   }
 
   showUserBoard(gameBoard: IGameboard) {
+    // we are storing userBoard
+    this.userBoard = gameBoard;
+
+    const userBoardUI = this.createDisplayBoard("user", gameBoard);
+
+    this.enablePlaceShips(userBoardUI, gameBoard.placeShip);
+
+    this.app.append(userBoardUI);
+  }
+
+  showUserBoardAgain(gameBoard: IGameboard) {
     const userBoardUI = this.createDisplayBoard("user", gameBoard);
     this.enablePlaceShips(userBoardUI, gameBoard.placeShip);
-    this.app.append(userBoardUI);
+
+    const oldUserBoard = this.getElement("#user");
+
+    this.app.replaceChild(userBoardUI, oldUserBoard);
   }
 
   displayGameStartPage(boardOne: IGameboard) {
@@ -70,6 +97,10 @@ export class View {
     this.app.append(this.header, this.container);
   }
 
+  getCurrentShip() {
+    return this.ships[this.shipIndex];
+  }
+
   enablePlaceShips(
     gameBoardUI: Element,
     placeShip: (
@@ -78,54 +109,54 @@ export class View {
       yCoord: YCoordinates
     ) => void
   ) {
-    const ships: { name: ShipNames; length: number }[] = [
-      { name: "Carrier", length: 5 },
-      { name: "Battleship", length: 4 },
-      { name: "Destroyer", length: 3 },
-      { name: "Submarine", length: 3 },
-      { name: "PatrolBoat", length: 2 },
-    ];
-    let shipIndex = 0;
-    let currentShip = ships[shipIndex];
+    this.attachListenerToTheCell(gameBoardUI, "click", (e: MouseEvent) => {
+      const target = e.target as HTMLDivElement;
+      const coordinates: HitCoordinates = {
+        x: target.dataset.xCoord as XCoordinates,
+        y: Number(target.dataset.yCoord) as YCoordinates,
+      };
 
-    this.attachListenerToTheCell(
-      gameBoardUI,
-      "click",
-      function listenForPlaceShip(e: MouseEvent) {
-        const target = e.target as HTMLDivElement;
-        const coordinates: HitCoordinates = {
-          x: target.dataset.xCoord as XCoordinates,
-          y: Number(target.dataset.yCoord) as YCoordinates,
-        };
+      const hasEnoughSpaceToPlaceShip = this.hasEnoughSpaceToPlaceShip(
+        this.getCurrentShip(),
+        coordinates
+      );
 
-        console.log(coordinates);
-        console.log("Get which ships to place");
-        console.log("place ships");
+      const isShipExistOnTheCoordinate =
+        this.isShipExistOnTheCoordinate(coordinates);
 
-        // click is not possible when there is no enough space
+      if (hasEnoughSpaceToPlaceShip) {
+        console.log("there is enough space, placing the ship!");
+        placeShip(this.getCurrentShip().name, coordinates.x, coordinates.y);
+        this.setNextShipToPlace();
+        this.showUserBoardAgain(this.userBoard);
       }
-    );
+
+      // Check if there is enough space, if not don't let user to place the ship
+
+      // I need to show the gameboard again.
+      // I also need to attach all the listeners again
+    });
 
     this.attachListenerToTheCell(
       gameBoardUI,
       "mouseenter",
       // ShowWhetherValidateMove
       (e: MouseEvent) => {
-        const target = e.target as HTMLDivElement;
+        const target = e.currentTarget as HTMLDivElement;
         const coordinates: HitCoordinates = {
           x: target.dataset.xCoord as XCoordinates,
           y: Number(target.dataset.yCoord) as YCoordinates,
         };
 
         const hasEnoughSpaceToPlaceShip = this.hasEnoughSpaceToPlaceShip(
-          currentShip,
+          this.getCurrentShip(),
           coordinates
         );
 
         if (hasEnoughSpaceToPlaceShip) {
-          console.log("O - show blue color");
+          target.style.background = "blue";
         } else {
-          target.style.pointerEvents = "none";
+          //
           target.style.background = "grey";
           console.log("X - disable click, grey out them");
         }
@@ -133,8 +164,54 @@ export class View {
     );
 
     this.attachListenerToTheCell(gameBoardUI, "mouseleave", (e: MouseEvent) => {
-      // When it leaves...what do you do?
+      const target = e.currentTarget as HTMLDivElement;
+      target.style.background = "none";
     });
+  }
+
+  setNextShipToPlace() {
+    this.shipIndex++;
+  }
+
+  isShipExistOnTheCoordinate(hitCoordinate: HitCoordinates) {
+    const shipNames: ShipNames[] = [
+      "Battleship",
+      "Carrier",
+      "Destroyer",
+      "PatrolBoat",
+      "Submarine",
+    ];
+
+    const userBoard = this.getUserBoard();
+    const currentShip = this.getCurrentShip();
+
+    const { x, y } = hitCoordinate;
+    const xCoordNum = getXCoordNumber(x);
+
+    let isExistingShip = false;
+
+    // i.e: xCoord: 5, currentShip carrier: 4
+    // 5, 6, 7, 8 is what we need to check
+    const coordinates = userBoard.getCoordinates();
+    for (let i = xCoordNum; i < xCoordNum + currentShip.length; i++) {
+      const cellStatus = userBoard.getCoordinate(x, y);
+    }
+
+    // I need to calculate if there is existing ship on the coordinates that I am going to
+    // place the new ship
+
+    // what status can ship
+
+    // For example it's placed at 5. Ship length is 3
+    // You need to check 5, 6, and 7
+
+    // So I need to check XCoordinate 5, 6, 7. And check if it has....any ship names
+
+    // If it has one of ships name....there is...!
+  }
+
+  getUserBoard() {
+    return this.userBoard;
   }
 
   hasEnoughSpaceToPlaceShip(
@@ -150,6 +227,8 @@ export class View {
     return true;
   }
 
+  handleClick() {}
+
   attachListenerToTheCell(
     gameBoardUI: Element,
     eventType: string,
@@ -161,52 +240,6 @@ export class View {
       for (let j = 0; j < cells.length; j++) {
         const cell = cells[j];
         cell.addEventListener(eventType, callback);
-      }
-    }
-  }
-
-  attachPlaceShipListener(gameBoardUI: Element) {
-    const rows = gameBoardUI.children;
-
-    for (let i = 0; i < rows.length; i++) {
-      const cells = rows[i].children;
-      for (let j = 0; j < cells.length; j++) {
-        const cell = cells[j];
-        cell.addEventListener("mouseenter", (e: MouseEvent) => {
-          const cell = e.currentTarget as HTMLDivElement;
-          cell.style.background = "#9ac7ac";
-
-          // Check what ship is being placed...
-
-          // const shipInfo = getCurrentShipBeingPlaced(gameBoard);
-          const coordinates = {
-            x: cell.dataset.xCoord as XCoordinates,
-            y: Number(cell.dataset.yCoord) as YCoordinates,
-          };
-
-          // if (hasEnoughSpace(shipInfo, coordinates)) {
-          //   console.log("enough space");
-          // }
-
-          // // - If there is a ship, show disable hover
-          // // - If there is no enough space, show disable hover
-
-          // if (true) {
-          // }
-        });
-
-        cell.addEventListener("mouseleave", (e: MouseEvent) => {
-          const cell = e.currentTarget as HTMLDivElement;
-          cell.style.background = "none";
-        });
-
-        cell.addEventListener("click", (e: MouseEvent) => {
-          const cell = e.currentTarget as HTMLDivElement;
-          const coordinates = {
-            x: cell.dataset.xCoord as XCoordinates,
-            y: Number(cell.dataset.yCoord) as YCoordinates,
-          };
-        });
       }
     }
   }

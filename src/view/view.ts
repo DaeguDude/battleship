@@ -70,19 +70,19 @@ export class View {
   }
 
   showUserBoard(gameBoard: IGameboard) {
-    // we are storing userBoard
-    this.userBoard = gameBoard;
-
     const userBoardUI = this.createDisplayBoard("user", gameBoard);
+    this.enablePlaceShips(userBoardUI, gameBoard);
 
-    this.enablePlaceShips(userBoardUI, gameBoard.placeShip);
+    console.log(userBoardUI);
+
+    console.log(this.getCurrentShip());
 
     this.app.append(userBoardUI);
   }
 
   showUserBoardAgain(gameBoard: IGameboard) {
     const userBoardUI = this.createDisplayBoard("user", gameBoard);
-    this.enablePlaceShips(userBoardUI, gameBoard.placeShip);
+    // this.enablePlaceShips(userBoardUI, gameBoard.placeShip);
 
     const oldUserBoard = this.getElement("#user");
 
@@ -101,14 +101,7 @@ export class View {
     return this.ships[this.shipIndex];
   }
 
-  enablePlaceShips(
-    gameBoardUI: Element,
-    placeShip: (
-      shipName: ShipNames,
-      xCoord: XCoordinates,
-      yCoord: YCoordinates
-    ) => void
-  ) {
+  enablePlaceShips(gameBoardUI: Element, gameBoard: IGameboard) {
     this.attachListenerToTheCell(gameBoardUI, "click", (e: MouseEvent) => {
       const target = e.target as HTMLDivElement;
       const coordinates: HitCoordinates = {
@@ -116,25 +109,31 @@ export class View {
         y: Number(target.dataset.yCoord) as YCoordinates,
       };
 
-      const hasEnoughSpaceToPlaceShip = this.hasEnoughSpaceToPlaceShip(
-        this.getCurrentShip(),
-        coordinates
-      );
-
-      const isShipExistOnTheCoordinate =
-        this.isShipExistOnTheCoordinate(coordinates);
-
-      if (hasEnoughSpaceToPlaceShip) {
-        console.log("there is enough space, placing the ship!");
-        placeShip(this.getCurrentShip().name, coordinates.x, coordinates.y);
-        this.setNextShipToPlace();
-        this.showUserBoardAgain(this.userBoard);
+      if (gameBoard.hasEnoughSpace(this.getCurrentShip().name, coordinates)) {
+        console.log("enough space");
+      } else {
+        console.log("not enough space");
       }
 
-      // Check if there is enough space, if not don't let user to place the ship
+      // const hasEnoughSpaceToPlaceShip = this.hasEnoughSpaceToPlaceShip(
+      //   this.getCurrentShip(),
+      //   coordinates
+      // );
 
-      // I need to show the gameboard again.
-      // I also need to attach all the listeners again
+      // const isShipExistOnTheCoordinate =
+      //   this.isShipExistOnTheCoordinate(coordinates);
+
+      // if (hasEnoughSpaceToPlaceShip) {
+      //   console.log("there is enough space, placing the ship!");
+      //   placeShip(this.getCurrentShip().name, coordinates.x, coordinates.y);
+      //   this.setNextShipToPlace();
+      //   this.showUserBoardAgain(this.userBoard);
+      // }
+
+      // // Check if there is enough space, if not don't let user to place the ship
+
+      // // I need to show the gameboard again.
+      // // I also need to attach all the listeners again
     });
 
     this.attachListenerToTheCell(
@@ -148,15 +147,13 @@ export class View {
           y: Number(target.dataset.yCoord) as YCoordinates,
         };
 
-        const hasEnoughSpaceToPlaceShip = this.hasEnoughSpaceToPlaceShip(
-          this.getCurrentShip(),
+        let isEnoughSpace = gameBoard.hasEnoughSpace(
+          this.getCurrentShip().name,
           coordinates
         );
-
-        if (hasEnoughSpaceToPlaceShip) {
+        if (isEnoughSpace) {
           target.style.background = "blue";
         } else {
-          //
           target.style.background = "grey";
           console.log("X - disable click, grey out them");
         }

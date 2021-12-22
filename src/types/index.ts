@@ -28,6 +28,10 @@ export interface Gameboard {
   ) => "success" | "failure";
   getCoordinate: (xCoord: XCoordinates, yCoord: YCoordinates) => CellStatus;
   getShip: (shipName: ShipNames) => Ship;
+  hasEnoughSpace: (
+    shipName: ShipNames,
+    coordinateToPlaceTheShip: HitCoordinates
+  ) => boolean;
   areAllShipsSunk: () => boolean;
 }
 

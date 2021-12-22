@@ -9,19 +9,12 @@ import {
   Ship as ShipType,
 } from "../../types";
 import { getXCoordNumber } from "../../utils/getXCoordNumber";
+import { hasEnoughSpace } from "./util";
 
 function Gameboard(): GameboardType {
   let coordinates = getInitialCoordinates();
   let shipCoordinatesInfo: any = {};
   const ships: ShipType[] = [];
-
-  // const shipNames: ShipNames[] = [
-  //   "PatrolBoat",
-  //   "Carrier",
-  //   "Battleship",
-  //   "Destroyer",
-  //   "Submarine",
-  // ];
 
   const placeShip = (
     shipName: ShipNames,
@@ -147,6 +140,7 @@ function Gameboard(): GameboardType {
     getCoordinate,
     getShip,
     areAllShipsSunk,
+    hasEnoughSpace,
   };
 }
 
@@ -200,10 +194,5 @@ function getShipLength(shipName: ShipNames): number {
       return 2;
   }
 }
-
-const myGameBoard = Gameboard();
-myGameBoard.placeShip("Carrier", "f", 9);
-myGameBoard.placeShip("Battleship", "d", 9);
-expect(myGameBoard.getCoordinate("f", 9)).toBe("Carrier");
 
 export { Gameboard };

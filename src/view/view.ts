@@ -173,6 +173,8 @@ export class View {
     this.shipIndex++;
   }
 
+  // User can't place the ship if there is already a ship
+  // where they are trying to place the ship
   isShipExistOnTheCoordinate(hitCoordinate: HitCoordinates) {
     const shipNames: ShipNames[] = [
       "Battleship",
@@ -188,13 +190,26 @@ export class View {
     const { x, y } = hitCoordinate;
     const xCoordNum = getXCoordNumber(x);
 
-    let isExistingShip = false;
+    let isNoExistingShip = true;
 
-    // i.e: xCoord: 5, currentShip carrier: 4
-    // 5, 6, 7, 8 is what we need to check
-    const coordinates = userBoard.getCoordinates();
     for (let i = xCoordNum; i < xCoordNum + currentShip.length; i++) {
-      const cellStatus = userBoard.getCoordinate(x, y);
+      console.log({ x, y });
+      console.log(userBoard.getCoordinates());
+      // const cellStatus = userBoard.getCoordinate(x, y);
+
+      // isNoExistingShip = shipNames.every((ship) => ship !== cellStatus);
+
+      // if (isNoExistingShip) {
+      //   continue;
+      // } else {
+      //   break;
+      // }
+    }
+
+    if (isNoExistingShip) {
+      console.log("there is no ship");
+    } else {
+      console.log("there is a ship");
     }
 
     // I need to calculate if there is existing ship on the coordinates that I am going to

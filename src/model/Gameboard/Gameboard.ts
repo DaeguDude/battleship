@@ -33,12 +33,19 @@ function Gameboard(): GameboardType {
     const xCoordNumber = getXCoordNumber(xCoord);
 
     const specifiedCorodinate = getCoordinate(xCoord, yCoord);
-    if (
-      specifiedCorodinate !== "hit" &&
-      specifiedCorodinate !== "noHit" &&
-      specifiedCorodinate !== "missed"
-    ) {
-      return "There is already a ship";
+
+    // I need to check all possible situation, not just same coordinate
+
+    for (let i = xCoordNumber; i < xCoordNumber + ship.length; i++) {
+      const coordinate = getCoordinate(xCoord, yCoord);
+      // I need to know how to run debugger in the vscode
+      if (
+        coordinate !== "hit" &&
+        coordinate !== "noHit" &&
+        coordinate !== "missed"
+      ) {
+        return "There is already a ship";
+      }
     }
 
     const hasEnoughSpace = checkForEnoughSpace(ship.length, xCoord);
@@ -178,5 +185,25 @@ function getInitialCoordinates() {
 
   return result;
 }
+
+function getShipLength(shipName: ShipNames): number {
+  switch (shipName) {
+    case "Carrier":
+      return 5;
+    case "Battleship":
+      return 4;
+    case "Destroyer":
+      return 3;
+    case "Submarine":
+      return 3;
+    case "PatrolBoat":
+      return 2;
+  }
+}
+
+const myGameBoard = Gameboard();
+myGameBoard.placeShip("Carrier", "f", 9);
+myGameBoard.placeShip("Battleship", "d", 9);
+expect(myGameBoard.getCoordinate("f", 9)).toBe("Carrier");
 
 export { Gameboard };

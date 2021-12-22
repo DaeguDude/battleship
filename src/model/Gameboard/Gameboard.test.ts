@@ -25,16 +25,23 @@ describe("PlaceShip", () => {
     }).toThrow("not enough space");
   });
 
-  test("There is already a boat, can't place the ship", () => {
+  test.only("There is already a boat, can't place the ship", () => {
     const myGameBoard = Gameboard();
 
-    myGameBoard.placeShip("PatrolBoat", "a", 0);
-    myGameBoard.placeShip("Submarine", "a", 0);
-    expect(myGameBoard.getCoordinate("a", 0)).toBe("PatrolBoat");
+    // // Placing on the Same Coordinate
+    // myGameBoard.placeShip("PatrolBoat", "a", 0);
+    // myGameBoard.placeShip("Submarine", "a", 0);
+    // expect(myGameBoard.getCoordinate("a", 0)).toBe("PatrolBoat");
 
-    myGameBoard.placeShip("Destroyer", "b", 1);
-    myGameBoard.placeShip("Battleship", "b", 1);
-    expect(myGameBoard.getCoordinate("b", 1)).toBe("Destroyer");
+    // Overlap situation
+    myGameBoard.placeShip("Carrier", "f", 9);
+    myGameBoard.placeShip("Battleship", "d", 9);
+    expect(myGameBoard.getCoordinate("f", 9)).toBe("Carrier");
+
+    // // Overlap situation
+    // myGameBoard.placeShip("Submarine", "c", 1);
+    // myGameBoard.placeShip("PatrolBoat", "b", 1);
+    // expect(myGameBoard.getCoordinate("c", 1)).toBe("Submarine");
   });
 
   test("Can't place the ship if some of coordinate overlaps ", () => {

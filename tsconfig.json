@@ -1,15 +1,15 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/",
-    "sourceMap": true,
+    "module": "commonjs",
     "noImplicitAny": true,
-    "module": "es6",
+    "sourceMap": true, // This
+    "outDir": "out",
     "target": "es5",
     "jsx": "react",
     "allowJs": false,
     "moduleResolution": "node",
     "esModuleInterop": true
   },
-  "include": ["src/**/*"],
+  // "include": ["src/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts", ".eslintrc.js"]
 }

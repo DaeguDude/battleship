@@ -109,11 +109,11 @@ export class View {
         y: Number(target.dataset.yCoord) as YCoordinates,
       };
 
-      if (gameBoard.hasEnoughSpace(this.getCurrentShip().name, coordinates)) {
-        console.log("enough space");
-      } else {
-        console.log("not enough space");
-      }
+      // if (gameBoard.hasEnoughSpace(this.getCurrentShip().name, coordinates)) {
+      //   console.log("enough space");
+      // } else {
+      //   console.log("not enough space");
+      // }
 
       // const hasEnoughSpaceToPlaceShip = this.hasEnoughSpaceToPlaceShip(
       //   this.getCurrentShip(),

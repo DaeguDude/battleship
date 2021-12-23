@@ -8,16 +8,50 @@ export function hasEnoughSpace(
   const LAST_X_COORD = 9;
   const shipLength = getShipLength(shipName);
   const xCoordNum = getXCoordNumber(coordinateToPlaceTheShip.x);
-  console.log({ xCoordNum });
 
-  // i.e Carrier: length 5, coordinate: { x: f(5), y: 0}
-  // 5, 6, 7, 8, 9 is Okay.
-  // However, shipLength + xCoordNum 5 + 5 will exceed LAST_X_COORd
   if (shipLength - 1 + xCoordNum <= LAST_X_COORD) {
     return true;
   }
 
   return false;
+}
+
+export function hasNoShipOnTheCoordinate(
+  shipName: ShipNames,
+  coordinates: Coordinates,
+  coordinateToPlaceTheShip: HitCoordinates
+) {
+  const ships: ShipNames[] = [
+    "Battleship",
+    "Carrier",
+    "Destroyer",
+    "PatrolBoat",
+    "Submarine",
+  ];
+
+  const shipLength = getShipLength(shipName);
+  const xCoordinatesInYRow = coordinates[coordinateToPlaceTheShip.y];
+
+  const xCoordAsNumber = getXCoordNumber(coordinateToPlaceTheShip.x);
+
+  let isShipExist = false;
+  for (let i = xCoordAsNumber; i < xCoordAsNumber + shipLength; i++) {
+    // If the current coordinate has ship names on it, you can not
+    // place the ship
+    console.log(xCoordinatesInYRow[i]);
+    if (
+      xCoordinatesInYRow[i] === "Carrier" ||
+      xCoordinatesInYRow[i] === "Battleship" ||
+      xCoordinatesInYRow[i] === "Destroyer" ||
+      xCoordinatesInYRow[i] === "Submarine" ||
+      xCoordinatesInYRow[i] === "PatrolBoat"
+    ) {
+      isShipExist = true;
+      break;
+    }
+  }
+
+  return isShipExist;
 }
 
 function getShipLength(shipName: ShipNames) {

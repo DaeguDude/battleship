@@ -50,5 +50,13 @@ describe("Check if there is any ship along the coordinate that you are trying to
         y: 2,
       })
     ).toBe(false);
+
+    myGameboard.placeShip("Destroyer", "a", 3);
+    expect(
+      hasNoShipOnTheCoordinate("Battleship", myGameboard.getCoordinates(), {
+        x: "c",
+        y: 3,
+      })
+    ).toBe(false);
   });
 });

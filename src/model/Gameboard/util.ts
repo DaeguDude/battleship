@@ -34,11 +34,8 @@ export function hasNoShipOnTheCoordinate(
 
   const xCoordAsNumber = getXCoordNumber(coordinateToPlaceTheShip.x);
 
-  let isShipExist = false;
+  let hasNoShip = true;
   for (let i = xCoordAsNumber; i < xCoordAsNumber + shipLength; i++) {
-    // If the current coordinate has ship names on it, you can not
-    // place the ship
-    console.log(xCoordinatesInYRow[i]);
     if (
       xCoordinatesInYRow[i] === "Carrier" ||
       xCoordinatesInYRow[i] === "Battleship" ||
@@ -46,12 +43,12 @@ export function hasNoShipOnTheCoordinate(
       xCoordinatesInYRow[i] === "Submarine" ||
       xCoordinatesInYRow[i] === "PatrolBoat"
     ) {
-      isShipExist = true;
+      hasNoShip = false;
       break;
     }
   }
 
-  return isShipExist;
+  return hasNoShip;
 }
 
 function getShipLength(shipName: ShipNames) {

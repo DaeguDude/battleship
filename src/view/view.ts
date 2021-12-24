@@ -109,6 +109,13 @@ export class View {
         y: Number(target.dataset.yCoord) as YCoordinates,
       };
 
+      gameBoard.placeShip(
+        this.getCurrentShip().name,
+        coordinates.x,
+        coordinates.y
+      );
+      this.shipIndex++;
+
       // if (gameBoard.hasEnoughSpace(this.getCurrentShip().name, coordinates)) {
       //   console.log("enough space");
       // } else {
@@ -151,7 +158,14 @@ export class View {
           this.getCurrentShip().name,
           coordinates
         );
-        if (isEnoughSpace) {
+
+        let hasNoShip = gameBoard.hasNoShipOnTheCoordinate(
+          this.getCurrentShip().name,
+          gameBoard.getCoordinates(),
+          coordinates
+        );
+
+        if (isEnoughSpace && hasNoShip) {
           target.style.background = "blue";
         } else {
           target.style.background = "grey";

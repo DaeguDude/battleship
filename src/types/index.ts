@@ -32,6 +32,11 @@ export interface Gameboard {
     shipName: ShipNames,
     coordinateToPlaceTheShip: HitCoordinates
   ) => boolean;
+  hasNoShipOnTheCoordinate: (
+    shipName: ShipNames,
+    coordinates: Coordinates,
+    coordinateToPlaceTheShip: HitCoordinates
+  ) => boolean;
   areAllShipsSunk: () => boolean;
 }
 

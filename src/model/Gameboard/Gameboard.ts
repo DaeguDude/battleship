@@ -9,7 +9,7 @@ import {
   Ship as ShipType,
 } from "../../types";
 import { getXCoordNumber } from "../../utils/getXCoordNumber";
-import { hasEnoughSpace } from "./util";
+import { hasEnoughSpace, hasNoShipOnTheCoordinate } from "./util";
 
 function Gameboard(): GameboardType {
   let coordinates = getInitialCoordinates();
@@ -141,6 +141,7 @@ function Gameboard(): GameboardType {
     getShip,
     areAllShipsSunk,
     hasEnoughSpace,
+    hasNoShipOnTheCoordinate,
   };
 }
 

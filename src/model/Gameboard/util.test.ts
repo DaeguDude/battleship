@@ -22,8 +22,6 @@ describe("Check if the gameboard has enough space to place the current ship", ()
 });
 
 describe("Check if there is any ship along the coordinate that you are trying to place", () => {
-  test("It returns true if there is no ship", () => {});
-
   test.only("It returns false if there is a ship", () => {
     const myGameboard = Gameboard();
 

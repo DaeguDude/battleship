@@ -1,6 +1,12 @@
 import { Coordinates, HitCoordinates, ShipNames } from "../../types";
 import { getXCoordNumber } from "../../utils/getXCoordNumber";
 
+// These belong to...Gameboard actually
+// So when I place the ship, I need to check that it doesn't place the ship
+// if there's pass these 2 requirements below
+// - it doesn't have enough space to place the ship
+// - It has some ship on the xCoordinates where new ship will be placed
+
 export function hasEnoughSpace(
   shipName: ShipNames,
   coordinateToPlaceTheShip: HitCoordinates

@@ -14,49 +14,52 @@ describe("PlaceShip", () => {
     ]);
   });
 
-  test("Coordinates exist, but not enough space", () => {
+  test("It has enough space to place the ship", () => {
     const myGameBoard = Gameboard();
-    expect(() => {
-      myGameBoard.placeShip("PatrolBoat", "j", 0);
-    }).toThrow("not enough space");
 
-    expect(() => {
-      myGameBoard.placeShip("Destroyer", "i", 0);
-    }).toThrow("not enough space");
+    expect(myGameBoard.placeShip("Carrier", "f", 0)).toBe(true);
+    expect(myGameBoard.placeShip("Battleship", "g", 1)).toBe(true);
+    expect(myGameBoard.placeShip("Destroyer", "h", 2)).toBe(true);
+    expect(myGameBoard.placeShip("Submarine", "h", 3)).toBe(true);
+    expect(myGameBoard.placeShip("PatrolBoat", "i", 4)).toBe(true);
   });
 
-  test.only("There is already a boat, can't place the ship", () => {
+  test("There is not enough space to place the ship", () => {
     const myGameBoard = Gameboard();
 
-    // // Placing on the Same Coordinate
-    // myGameBoard.placeShip("PatrolBoat", "a", 0);
-    // myGameBoard.placeShip("Submarine", "a", 0);
-    // expect(myGameBoard.getCoordinate("a", 0)).toBe("PatrolBoat");
-
-    // Overlap situation
-    myGameBoard.placeShip("Carrier", "f", 9);
-    myGameBoard.placeShip("Battleship", "d", 9);
-    expect(myGameBoard.getCoordinate("f", 9)).toBe("Carrier");
-
-    // // Overlap situation
-    // myGameBoard.placeShip("Submarine", "c", 1);
-    // myGameBoard.placeShip("PatrolBoat", "b", 1);
-    // expect(myGameBoard.getCoordinate("c", 1)).toBe("Submarine");
+    expect(myGameBoard.placeShip("Carrier", "g", 0)).toBe("not enough space");
+    expect(myGameBoard.placeShip("Battleship", "h", 1)).toBe(
+      "not enough space"
+    );
+    expect(myGameBoard.placeShip("Destroyer", "i", 1)).toBe("not enough space");
+    expect(myGameBoard.placeShip("Submarine", "i", 1)).toBe("not enough space");
+    expect(myGameBoard.placeShip("PatrolBoat", "j", 1)).toBe(
+      "not enough space"
+    );
   });
 
-  test("Can't place the ship if some of coordinate overlaps ", () => {
-    const myGameBoard = Gameboard();
+  test("There is already a boat, can't place the ship", () => {
+    const myGameboard = Gameboard();
 
-    myGameBoard.placeShip("Destroyer", "a", 0);
-    myGameBoard.placeShip("Submarine", "c", 0);
+    myGameboard.placeShip("PatrolBoat", "i", 0);
+    expect(myGameboard.placeShip("Carrier", "f", 0)).toBe(
+      "there is a ship along the xCoordinates"
+    );
 
-    expect(myGameBoard.getCoordinate("c", 0)).toBe("Destroyer");
+    myGameboard.placeShip("Submarine", "h", 1);
+    expect(myGameboard.placeShip("Battleship", "g", 1)).toBe(
+      "there is a ship along the xCoordinates"
+    );
 
-    expect(myGameBoard.getCoordinate("d", 0)).toBe("noHit");
-    expect(myGameBoard.getCoordinate("d", 0)).not.toBe("Submarine");
+    myGameboard.placeShip("Carrier", "f", 2);
+    expect(myGameboard.placeShip("Battleship", "c", 2)).toBe(
+      "there is a ship along the xCoordinates"
+    );
 
-    expect(myGameBoard.getCoordinate("d", 0)).toBe("noHit");
-    expect(myGameBoard.getCoordinate("e", 0)).not.toBe("Submarine");
+    myGameboard.placeShip("Destroyer", "a", 3);
+    expect(myGameboard.placeShip("Battleship", "c", 3)).toBe(
+      "there is a ship along the xCoordinates"
+    );
   });
 });
 

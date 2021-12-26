@@ -109,38 +109,32 @@ export class View {
         y: Number(target.dataset.yCoord) as YCoordinates,
       };
 
+      let isEnoughSpace = gameBoard.hasEnoughSpace(
+        this.getCurrentShip().name,
+        coordinates
+      );
+
+      let hasNoShip = gameBoard.hasNoShipOnTheCoordinate(
+        this.getCurrentShip().name,
+        gameBoard.getCoordinates(),
+        coordinates
+      );
+
+      if (isEnoughSpace && hasNoShip) {
+        console.log("you can place the ship");
+      } else {
+        console.log("You can not place the ship");
+      }
+
+      // So I should have some validation here as well.
+      // You can not place the ship if there's no space or if there's a ship
+
       gameBoard.placeShip(
         this.getCurrentShip().name,
         coordinates.x,
         coordinates.y
       );
       this.shipIndex++;
-
-      // if (gameBoard.hasEnoughSpace(this.getCurrentShip().name, coordinates)) {
-      //   console.log("enough space");
-      // } else {
-      //   console.log("not enough space");
-      // }
-
-      // const hasEnoughSpaceToPlaceShip = this.hasEnoughSpaceToPlaceShip(
-      //   this.getCurrentShip(),
-      //   coordinates
-      // );
-
-      // const isShipExistOnTheCoordinate =
-      //   this.isShipExistOnTheCoordinate(coordinates);
-
-      // if (hasEnoughSpaceToPlaceShip) {
-      //   console.log("there is enough space, placing the ship!");
-      //   placeShip(this.getCurrentShip().name, coordinates.x, coordinates.y);
-      //   this.setNextShipToPlace();
-      //   this.showUserBoardAgain(this.userBoard);
-      // }
-
-      // // Check if there is enough space, if not don't let user to place the ship
-
-      // // I need to show the gameboard again.
-      // // I also need to attach all the listeners again
     });
 
     this.attachListenerToTheCell(
@@ -166,8 +160,17 @@ export class View {
         );
 
         if (isEnoughSpace && hasNoShip) {
-          target.style.background = "blue";
+          target.style.cursor = "cell";
+          // I first need to grab all the cells that ship will be taking place
+
+          const rowElement = this.getElement("#user").children[coordinates.y];
+          const numXCoord = getXCoordNumber(coordinates.x);
+          for (let i = 0; i < this.getCurrentShip().length; i++) {
+            const cell = rowElement.children[numXCoord + i] as HTMLDivElement;
+            cell.style.background = "blue";
+          }
         } else {
+          target.style.cursor = "not-allowed";
           target.style.background = "grey";
           console.log("X - disable click, grey out them");
         }
@@ -176,7 +179,32 @@ export class View {
 
     this.attachListenerToTheCell(gameBoardUI, "mouseleave", (e: MouseEvent) => {
       const target = e.currentTarget as HTMLDivElement;
-      target.style.background = "none";
+      const coordinates: HitCoordinates = {
+        x: target.dataset.xCoord as XCoordinates,
+        y: Number(target.dataset.yCoord) as YCoordinates,
+      };
+
+      let isEnoughSpace = gameBoard.hasEnoughSpace(
+        this.getCurrentShip().name,
+        coordinates
+      );
+
+      let hasNoShip = gameBoard.hasNoShipOnTheCoordinate(
+        this.getCurrentShip().name,
+        gameBoard.getCoordinates(),
+        coordinates
+      );
+
+      if (isEnoughSpace && hasNoShip) {
+        const rowElement = this.getElement("#user").children[coordinates.y];
+        const numXCoord = getXCoordNumber(coordinates.x);
+        for (let i = 0; i < this.getCurrentShip().length; i++) {
+          const cell = rowElement.children[numXCoord + i] as HTMLDivElement;
+          cell.style.background = "none";
+        }
+      } else {
+        target.style.background = "none";
+      }
     });
   }
 
@@ -240,21 +268,6 @@ export class View {
     return this.userBoard;
   }
 
-  hasEnoughSpaceToPlaceShip(
-    ship: { name: ShipNames; length: number },
-    coordinates: HitCoordinates
-  ): boolean {
-    const LAST_X_INDEX = 9;
-
-    if (getXCoordNumber(coordinates.x) + (ship.length - 1) > LAST_X_INDEX) {
-      return false;
-    }
-
-    return true;
-  }
-
-  handleClick() {}
-
   attachListenerToTheCell(
     gameBoardUI: Element,
     eventType: string,
@@ -268,33 +281,6 @@ export class View {
         cell.addEventListener(eventType, callback);
       }
     }
-  }
-
-  showBoard(gameBoardElem: Element) {
-    const board = this.getElement(".board");
-    board.parentNode.replaceChild(gameBoardElem, board);
-  }
-
-  createEmptyDisplayBoard(player: "user") {
-    const board = this.createElement("div", "board");
-    player === "user"
-      ? board.setAttribute("id", "user")
-      : board.setAttribute("id", "computer");
-
-    for (let i = 0; i < 10; i++) {
-      const row = this.createElement("div", "row");
-      for (let j = 0; j < 10; j++) {
-        const dCell = this.createElement("div");
-        dCell.className = getClassNameForCell("noHit");
-        dCell.dataset.xCoord = getXCoordChar(j);
-        dCell.dataset.yCoord = String(i);
-
-        row.appendChild(dCell);
-      }
-      board.appendChild(row);
-    }
-
-    return board;
   }
 
   displayBoard(gameboard: Gameboard, player: "user" | "computer") {
@@ -441,45 +427,3 @@ function getCurrentShipBeingPlaced(shipCounter: number): IShipInfo {
       return { name: "PatrolBoat", length: 2 };
   }
 }
-
-function getCurrentShipBeingPlacedUI(gameBoardUI: Element) {
-  // No, no, no... I can just check coordinates from the gameBoard!
-}
-
-function hasEnoughSpace(shipInfo: IShipInfo, coordinates: HitCoordinates) {
-  if (checkForEnoughSpace(shipInfo.length, coordinates.x)) {
-    return true;
-  }
-
-  return false;
-}
-
-// NOTE: ONCE ship is placed, show the gameboard again.
-
-// switch (shipCounter) {
-//   case 0:
-//     gameBoard.placeShip("Carrier", coordinates.x, coordinates.y);
-//     this.showBoard(getBoardToDisplay(gameBoard));
-//     shipCounter++;
-//     break;
-//   case 1:
-//     gameBoard.placeShip("Battleship", coordinates.x, coordinates.y);
-//     this.showBoard(getBoardToDisplay(gameBoard));
-//     shipCounter++;
-//     break;
-//   case 2:
-//     gameBoard.placeShip("Destroyer", coordinates.x, coordinates.y);
-//     this.showBoard(getBoardToDisplay(gameBoard));
-//     shipCounter++;
-//     break;
-//   case 3:
-//     gameBoard.placeShip("PatrolBoat", coordinates.x, coordinates.y);
-//     this.showBoard(getBoardToDisplay(gameBoard));
-//     shipCounter++;
-//     break;
-//   case 4:
-//     gameBoard.placeShip("Submarine", coordinates.x, coordinates.y);
-//     this.showBoard(getBoardToDisplay(gameBoard));
-//     shipCounter++;
-//     break;
-// }

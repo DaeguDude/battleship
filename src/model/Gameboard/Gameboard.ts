@@ -9,7 +9,10 @@ import {
   Ship as ShipType,
 } from "../../types";
 import { getXCoordNumber } from "../../utils/getXCoordNumber";
-import { hasEnoughSpace, hasNoShipOnTheCoordinate } from "./util";
+import {
+  hasEnoughSpace as checkEnoughSpace,
+  hasNoShipOnTheCoordinate,
+} from "./util";
 
 function Gameboard(): GameboardType {
   let coordinates = getInitialCoordinates();
@@ -25,28 +28,19 @@ function Gameboard(): GameboardType {
     const ship = Ship(shipName);
     const xCoordNumber = getXCoordNumber(xCoord);
 
-    const specifiedCorodinate = getCoordinate(xCoord, yCoord);
-
-    // I need to check all possible situation, not just same coordinate
-
-    for (let i = xCoordNumber; i < xCoordNumber + ship.length; i++) {
-      const coordinate = getCoordinate(xCoord, yCoord);
-      // I need to know how to run debugger in the vscode
-      if (
-        coordinate !== "hit" &&
-        coordinate !== "noHit" &&
-        coordinate !== "missed"
-      ) {
-        return "There is already a ship";
-      }
-    }
-
-    const hasEnoughSpace = checkForEnoughSpace(ship.length, xCoord);
+    const hasEnoughSpace = checkEnoughSpace(shipName, { x: xCoord, y: yCoord });
     if (!hasEnoughSpace) {
-      throw new Error("not enough space");
+      return "not enough space";
     }
 
-    // mark the ship in the coordinate
+    const hasNoShip = hasNoShipOnTheCoordinate(shipName, getCoordinates(), {
+      x: xCoord,
+      y: yCoord,
+    });
+    if (!hasNoShip) {
+      return "there is a ship along the xCoordinates";
+    }
+
     const newCoordinates = cloneDeep(coordinates);
     const row = newCoordinates[yCoord];
     for (let i = xCoordNumber; i < xCoordNumber + ship.length; i++) {
@@ -57,6 +51,8 @@ function Gameboard(): GameboardType {
 
     setShipCoordinatesInfo(ship.name, xCoord, yCoord);
     ships.push(ship);
+
+    return true;
   };
 
   const getCoordinates = () => {
@@ -140,21 +136,10 @@ function Gameboard(): GameboardType {
     getCoordinate,
     getShip,
     areAllShipsSunk,
-    hasEnoughSpace,
+    hasEnoughSpace: checkEnoughSpace,
     hasNoShipOnTheCoordinate,
   };
 }
-
-// const updateCoordinates = (
-//   oldCoordinates: any,
-//   xCoord: XCoordinates,
-//   yCoord: YCoordinates,
-//   value: any
-// ) => {
-//   const newCoordinates = Object.assign({}, oldCoordinates);
-//   newCoordinates[yCoord][xCoord] = value;
-//   return newCoordinates;
-// };
 
 function cloneDeep(x: any) {
   return JSON.parse(JSON.stringify(x));
@@ -179,21 +164,6 @@ function getInitialCoordinates() {
   }
 
   return result;
-}
-
-function getShipLength(shipName: ShipNames): number {
-  switch (shipName) {
-    case "Carrier":
-      return 5;
-    case "Battleship":
-      return 4;
-    case "Destroyer":
-      return 3;
-    case "Submarine":
-      return 3;
-    case "PatrolBoat":
-      return 2;
-  }
 }
 
 export { Gameboard };

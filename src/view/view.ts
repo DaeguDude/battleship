@@ -72,20 +72,14 @@ export class View {
   showUserBoard(gameBoard: IGameboard) {
     const userBoardUI = this.createDisplayBoard("user", gameBoard);
     this.enablePlaceShips(userBoardUI, gameBoard);
-
-    console.log(userBoardUI);
-
-    console.log(this.getCurrentShip());
-
     this.app.append(userBoardUI);
   }
 
   showUserBoardAgain(gameBoard: IGameboard) {
     const userBoardUI = this.createDisplayBoard("user", gameBoard);
-    // this.enablePlaceShips(userBoardUI, gameBoard.placeShip);
+    this.enablePlaceShips(userBoardUI, gameBoard);
 
     const oldUserBoard = this.getElement("#user");
-
     this.app.replaceChild(userBoardUI, oldUserBoard);
   }
 
@@ -126,15 +120,11 @@ export class View {
         console.log("You can not place the ship");
       }
 
-      // So I should have some validation here as well.
-      // You can not place the ship if there's no space or if there's a ship
-
-      gameBoard.placeShip(
+      this.placeShip(
         this.getCurrentShip().name,
-        coordinates.x,
-        coordinates.y
+        { x: coordinates.x, y: coordinates.y },
+        gameBoard
       );
-      this.shipIndex++;
     });
 
     this.attachListenerToTheCell(
@@ -208,60 +198,21 @@ export class View {
     });
   }
 
-  setNextShipToPlace() {
+  placeShip(
+    shipName: ShipNames,
+    coordinates: HitCoordinates,
+    gameBoard: IGameboard
+  ) {
+    gameBoard.placeShip(shipName, coordinates.x, coordinates.y);
+
     this.shipIndex++;
+    // NOTE: check if user has placed all the ships.
+
+    this.showUserBoardAgain(gameBoard);
   }
 
-  // User can't place the ship if there is already a ship
-  // where they are trying to place the ship
-  isShipExistOnTheCoordinate(hitCoordinate: HitCoordinates) {
-    const shipNames: ShipNames[] = [
-      "Battleship",
-      "Carrier",
-      "Destroyer",
-      "PatrolBoat",
-      "Submarine",
-    ];
-
-    const userBoard = this.getUserBoard();
-    const currentShip = this.getCurrentShip();
-
-    const { x, y } = hitCoordinate;
-    const xCoordNum = getXCoordNumber(x);
-
-    let isNoExistingShip = true;
-
-    for (let i = xCoordNum; i < xCoordNum + currentShip.length; i++) {
-      console.log({ x, y });
-      console.log(userBoard.getCoordinates());
-      // const cellStatus = userBoard.getCoordinate(x, y);
-
-      // isNoExistingShip = shipNames.every((ship) => ship !== cellStatus);
-
-      // if (isNoExistingShip) {
-      //   continue;
-      // } else {
-      //   break;
-      // }
-    }
-
-    if (isNoExistingShip) {
-      console.log("there is no ship");
-    } else {
-      console.log("there is a ship");
-    }
-
-    // I need to calculate if there is existing ship on the coordinates that I am going to
-    // place the new ship
-
-    // what status can ship
-
-    // For example it's placed at 5. Ship length is 3
-    // You need to check 5, 6, and 7
-
-    // So I need to check XCoordinate 5, 6, 7. And check if it has....any ship names
-
-    // If it has one of ships name....there is...!
+  setNextShipToPlace() {
+    this.shipIndex++;
   }
 
   getUserBoard() {
@@ -333,6 +284,13 @@ export class View {
   }
 
   createDisplayBoard(player: "user" | "computer", gameboard: Gameboard) {
+    const shipNames: ShipNames[] = [
+      "Carrier",
+      "Battleship",
+      "Destroyer",
+      "PatrolBoat",
+      "Submarine",
+    ];
     const coordinates = gameboard.getCoordinates();
 
     const board = this.createElement("div", "board");
@@ -344,6 +302,14 @@ export class View {
       const row = this.createElement("div", "row");
       eachRow.forEach((cell, cellIndex) => {
         const dCell = this.createElement("div");
+
+        const isNotShip = shipNames.every((shipName) => shipName !== cell);
+        if (!isNotShip) {
+          const shipLetter = this.createElement("span");
+          shipLetter.innerText = cell[0];
+          dCell.appendChild(shipLetter);
+        }
+
         dCell.className = getClassNameForCell(cell);
         dCell.dataset.xCoord = getXCoordChar(cellIndex);
         dCell.dataset.yCoord = String(rowIndex);

@@ -83,14 +83,6 @@ export class View {
     this.app.replaceChild(userBoardUI, oldUserBoard);
   }
 
-  displayGameStartPage(boardOne: IGameboard) {
-    const boardToDisplay = this.createDisplayBoard("user", boardOne);
-    const shipsContainer = this.createShipsContainer();
-    this.container.append(boardToDisplay, shipsContainer);
-
-    this.app.append(this.header, this.container);
-  }
-
   getCurrentShip() {
     return this.ships[this.shipIndex];
   }
@@ -220,10 +212,6 @@ export class View {
     this.shipIndex++;
   }
 
-  getUserBoard() {
-    return this.userBoard;
-  }
-
   attachListenerToTheCell(
     gameBoardUI: Element,
     eventType: string,
@@ -239,53 +227,10 @@ export class View {
     }
   }
 
-  displayBoard(gameboard: Gameboard, player: "user" | "computer") {
-    const coordinates = gameboard.getCoordinates();
-
-    if (!this.getElement("#user") || !this.getElement("#computer")) {
-      const newDisplayBoard = this.createDisplayBoard(player, gameboard);
-      this.container.append(newDisplayBoard);
-    }
-
-    // There is already board present
-    const board = this.getElement(`#${player}`);
-    coordinates.forEach((eachRow, rowIndex) => {
-      const dRow = board.children[rowIndex];
-      eachRow.forEach((cell, cellIndex) => {
-        const dCell = dRow.children[cellIndex];
-        dCell.className = getClassNameForCell(cell);
-      });
-    });
-  }
-
   clearDisplay() {
     while (this.app.firstChild) {
       this.app.removeChild(this.app.firstChild);
     }
-  }
-
-  bindClickCoordinate(
-    player: "user" | "computer",
-    handler: (event: any) => void
-  ) {
-    const board = this.getElement(`#${player}`);
-    const rows = board.children;
-
-    for (let i = 0; i < rows.length; i++) {
-      const row = rows[i];
-      const cells = row.children;
-
-      for (let j = 0; j < cells.length; j++) {
-        const cell = cells[j];
-        cell.addEventListener("click", (e: any) => {
-          handler(e);
-        });
-      }
-    }
-  }
-
-  bindGameboardUpdated(callback: any) {
-    this.onGameboardUpdated = callback;
   }
 
   createDisplayBoard(player: "user" | "computer", gameboard: Gameboard) {
@@ -327,20 +272,6 @@ export class View {
 
     return board;
   }
-
-  createShipsContainer() {
-    const container = this.createElement("div", "ships-container");
-    for (let i = 0; i < 5; i++) {
-      const shipRow = this.createElement("div", "ship-row");
-      for (let j = 0; j < 2; j++) {
-        // I need to create ship and attach here...
-      }
-
-      container.append(shipRow);
-    }
-
-    return container;
-  }
 }
 
 export function getClassNameForCell(cell: CellStatus) {
@@ -373,28 +304,5 @@ export function getClassNameForCell(cell: CellStatus) {
 
   if (cell === "noHit") {
     return "cell noHit";
-  }
-}
-
-interface IShipInfo {
-  name: ShipNames;
-  length: 2 | 3 | 4 | 5;
-}
-
-function getCurrentShipBeingPlaced(shipCounter: number): IShipInfo {
-  switch (shipCounter) {
-    case 0:
-      return { name: "Carrier", length: 5 };
-    case 1:
-      return { name: "Battleship", length: 4 };
-
-    case 2:
-      return { name: "Destroyer", length: 3 };
-
-    case 3:
-      return { name: "Submarine", length: 3 };
-
-    case 4:
-      return { name: "PatrolBoat", length: 2 };
   }
 }

@@ -108,15 +108,14 @@ export class View {
 
       if (isEnoughSpace && hasNoShip) {
         console.log("you can place the ship");
+        this.placeShip(
+          this.getCurrentShip().name,
+          { x: coordinates.x, y: coordinates.y },
+          gameBoard
+        );
       } else {
         console.log("You can not place the ship");
       }
-
-      this.placeShip(
-        this.getCurrentShip().name,
-        { x: coordinates.x, y: coordinates.y },
-        gameBoard
-      );
     });
 
     this.attachListenerToTheCell(

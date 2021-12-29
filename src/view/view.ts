@@ -203,10 +203,15 @@ export class View {
     coordinates: HitCoordinates,
     gameBoard: IGameboard
   ) {
+    const MAX_SHIP_INDEX = 4;
+
     gameBoard.placeShip(shipName, coordinates.x, coordinates.y);
 
-    this.shipIndex++;
-    // NOTE: check if user has placed all the ships.
+    if (this.shipIndex === MAX_SHIP_INDEX) {
+      // Now I need to show the userboard
+    } else {
+      this.shipIndex++;
+    }
 
     this.showUserBoardAgain(gameBoard);
   }

@@ -58,7 +58,7 @@
 .noHit {
 }
 
-.Battleship {
+/* .Battleship {
   background: rgb(67, 155, 33);
 }
 
@@ -76,7 +76,7 @@
 
 .Submarine {
   background: rgb(67, 155, 33);
-}
+} */
 
 .ships-container {
   height: 300px;

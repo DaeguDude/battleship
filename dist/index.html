@@ -4,30 +4,80 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://kit.fontawesome.com/fadac8530c.js"
+      crossorigin="anonymous"
+    ></script>
     <title>Document</title>
   </head>
   <body>
     <div class="app">
-      <div class="enter-screen h-screen w-screen flex flex-col">
+      <div class="enter-screen h-screen w-screen flex flex-col text-[#191414]">
         <header
-          class="bg-black text-white flex justify-center items-center h-[70px]"
+          class="
+            bg-[#1db954]
+            text-white
+            flex
+            justify-center
+            items-center
+            h-[70px]
+          "
         >
-          <h1 class="uppercase">battleship</h1>
+          <h1 class="text-4xl uppercase font-bold">battleship</h1>
         </header>
 
-        <main class="grow flex flex-col">
-          <h2>welcome on board! to start the game, enter your name</h2>
-          <input type="text" class="bg-black" />
-          <button>start</button>
+        <main class="grow flex flex-col justify-center items-center">
+          <h2 class="text-center text-3xl uppercase font-bold">
+            welcome on board! <br />
+            to start the game, enter your name
+          </h2>
+          <input
+            type="text"
+            class="
+              h-[50px]
+              my-4
+              border-2
+              py-2
+              px-3
+              outline-none
+              rounded-lg
+              text-xl text-center
+            "
+          />
+          <button
+            class="border-2 uppercase font-bold p-2 rounded-lg bg-[#1DB954]"
+          >
+            start <br />
+            the game
+          </button>
         </main>
 
         <footer
-          class="bg-black text-white flex justify-center items-center h-[70px]"
+          class="
+            bg-[#1db954]
+            text-white
+            flex
+            justify-center
+            items-center
+            h-[70px]
+          "
         >
           created by DaeguDude
-          <img src="" alt="github" />
-          <img src="" alt="twitter" />
-          <img src="" alt="email" />
+          <a
+            class="text-2xl pl-2 hover:text-[#1db954]"
+            href="https://github.com/daegudude"
+            ><i class="fab fa-github"></i
+          ></a>
+          <a
+            class="text-2xl pl-2 hover:text-[#1db954]"
+            href="https://twitter.com/Daegudude_Kim"
+            ><i class="fab fa-twitter-square"></i
+          ></a>
+          <a
+            class="text-2xl pl-2 hover:text-[#1db954]"
+            href="mailto:k3hppk@gmail.com"
+            ><i class="far fa-envelope"></i
+          ></a>
         </footer>
       </div>
     </div>

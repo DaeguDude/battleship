@@ -11,6 +11,7 @@ import {
 import { CellStatus, Gameboard } from "../types";
 import { getXCoordChar } from "../utils/getXCoordChar";
 import { getXCoordNumber } from "../utils/getXCoordNumber";
+import { getFrontPage } from "./frontPage";
 
 export class View {
   app: Element;
@@ -24,6 +25,7 @@ export class View {
   ships: { name: ShipNames; length: number }[];
   shipIndex: number;
   currentShip: { name: ShipNames; length: number };
+  frontPageHTMLContent: string;
 
   constructor() {
     this.app = this.getElement(".app");
@@ -35,6 +37,7 @@ export class View {
     this.container = this.createElement("div", "container");
     this.header.append(this.title);
     this.userBoard;
+    this.frontPageHTMLContent = getFrontPage();
 
     this.ships = [
       { name: "Carrier", length: 5 },
@@ -45,6 +48,24 @@ export class View {
     ];
     this.shipIndex = 0;
     this.currentShip = this.ships[this.shipIndex];
+  }
+
+  showEnteringScreen(showNextScreen: (userName: string) => void) {
+    const frontPageHTMLContent = this.frontPageHTMLContent;
+    const app = this.getElement(".app");
+
+    const frontPageFragment = document
+      .createRange()
+      .createContextualFragment(frontPageHTMLContent);
+
+    frontPageFragment
+      .querySelector(".start-game-btn")
+      .addEventListener("click", (e) => {
+        const name = (this.getElement(".user-name") as HTMLInputElement).value;
+        showNextScreen(name);
+      });
+
+    app.appendChild(frontPageFragment);
   }
 
   createElement(tag: string, className?: string | string[]) {

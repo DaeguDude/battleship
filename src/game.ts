@@ -19,11 +19,14 @@ export class Game {
     this.user = Player("user", this.computerBoard);
     this.computer = Player("computer", this.userBoard);
 
-    this.start();
     this.currentPlayer = "user";
   }
 
-  start() {
+  showUserBoardToPlaceTheShip = (userName: string) => {
     this.view.showUserBoard(this.userBoard);
+  };
+
+  start() {
+    this.view.showEnteringScreen(this.showUserBoardToPlaceTheShip);
   }
 }

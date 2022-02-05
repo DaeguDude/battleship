@@ -1,12 +1,6 @@
 import { Coordinates, HitCoordinates, ShipNames } from "../../types";
 import { getXCoordNumber } from "../../utils/getXCoordNumber";
 
-// These belong to...Gameboard actually
-// So when I place the ship, I need to check that it doesn't place the ship
-// if there's pass these 2 requirements below
-// - it doesn't have enough space to place the ship
-// - It has some ship on the xCoordinates where new ship will be placed
-
 export function hasEnoughSpace(
   shipName: ShipNames,
   coordinateToPlaceTheShip: HitCoordinates
@@ -36,18 +30,18 @@ export function hasNoShipOnTheCoordinate(
   ];
 
   const shipLength = getShipLength(shipName);
-  const xCoordinatesInYRow = coordinates[coordinateToPlaceTheShip.y];
+  const row = coordinates[coordinateToPlaceTheShip.y];
 
-  const xCoordAsNumber = getXCoordNumber(coordinateToPlaceTheShip.x);
+  const numXCoord = getXCoordNumber(coordinateToPlaceTheShip.x);
 
   let hasNoShip = true;
-  for (let i = xCoordAsNumber; i < xCoordAsNumber + shipLength; i++) {
+  for (let i = numXCoord; i < numXCoord + shipLength; i++) {
     if (
-      xCoordinatesInYRow[i] === "Carrier" ||
-      xCoordinatesInYRow[i] === "Battleship" ||
-      xCoordinatesInYRow[i] === "Destroyer" ||
-      xCoordinatesInYRow[i] === "Submarine" ||
-      xCoordinatesInYRow[i] === "PatrolBoat"
+      row[i] === "Carrier" ||
+      row[i] === "Battleship" ||
+      row[i] === "Destroyer" ||
+      row[i] === "Submarine" ||
+      row[i] === "PatrolBoat"
     ) {
       hasNoShip = false;
       break;

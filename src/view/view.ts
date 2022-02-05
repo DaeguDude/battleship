@@ -98,11 +98,23 @@ export class View {
     const board = this.getElement(".board");
     const newBoard = ECreateDisplayBoard(gameBoard);
     this.addClickEventHandler(newBoard);
-
     board.replaceWith(newBoard);
+
+    if (this.areAllShipsPlaced(this.shipIndex)) {
+      return console.log("show next page");
+    }
 
     this.shipIndex++;
   };
+
+  areAllShipsPlaced(shipIndex: number) {
+    const LAST_ShIP_INDEX = 4;
+    if (shipIndex === LAST_ShIP_INDEX) {
+      return true;
+    }
+
+    return false;
+  }
 
   bindGameBoardUpdated = (handler: any) => {
     console.log("Update the game board");

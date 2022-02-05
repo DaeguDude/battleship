@@ -45,9 +45,6 @@ export class View {
   }
 
   showPlacingShipPage(userName: string, gameBoard: Gameboard) {
-    console.log("View - Player is added, show placing ship page");
-    console.log(userName, gameBoard);
-
     const mainOnTheScreen = document.querySelector("main");
     const mainToReplace = getPlacingShipPage(userName, gameBoard);
     mainOnTheScreen.replaceWith(mainToReplace);
@@ -76,7 +73,6 @@ export class View {
   };
 
   bindAddPlayer = (handler: any) => {
-    // handleAddPlayer from Controller
     const frontPageHTMLContent = this.frontPageHTMLContent;
     const app = this.getElement(".app");
 
@@ -115,10 +111,6 @@ export class View {
 
     return false;
   }
-
-  bindGameBoardUpdated = (handler: any) => {
-    console.log("Update the game board");
-  };
 
   bindPlaceShip = (
     handler: (coordinates: HitCoordinates, ship: ShipNames) => void
@@ -172,20 +164,5 @@ export class View {
 
   setNextShipToPlace() {
     this.shipIndex++;
-  }
-
-  attachListenerToTheCell(
-    gameBoardUI: Element,
-    eventType: string,
-    callback: EventListener
-  ) {
-    const rows = gameBoardUI.children;
-    for (let i = 0; i < rows.length; i++) {
-      const cells = rows[i].children;
-      for (let j = 0; j < cells.length; j++) {
-        const cell = cells[j];
-        cell.addEventListener(eventType, callback);
-      }
-    }
   }
 }

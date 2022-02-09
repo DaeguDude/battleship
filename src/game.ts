@@ -37,6 +37,13 @@ export class Game {
     this.view.updateGameBoard(gameBoard);
   };
 
+  onEveryShipPlaced = () => {
+    const userBoard = this.model.userBoard;
+    const computerBoard = this.model.computerBoard;
+
+    this.view.showMainGamePage(userBoard, computerBoard);
+  };
+
   handlePlaceShip = (coordinates: HitCoordinates, ship: ShipNames) => {
     this.model.placeShip("user", coordinates, ship);
   };
@@ -56,5 +63,7 @@ export class Game {
     // View 한테, place ship을 할 때 사용할 핸들러를 주어야함
     this.view.bindPlaceShip(this.handlePlaceShip);
     this.model.bindShipPlaced(this.onShipPlaced);
+
+    this.view.bindEveryShipPlaced(this.onEveryShipPlaced);
   }
 }

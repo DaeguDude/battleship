@@ -8,6 +8,7 @@ import {
 } from "../types";
 import { Gameboard } from "../types";
 import { getFrontPage } from "./frontPage";
+import { getMainPage } from "./mainGamePage";
 import {
   createDisplayBoard as ECreateDisplayBoard,
   getPlacingShipPage,
@@ -24,6 +25,7 @@ export class View {
   userBoard: IGameboard;
   computerBoard: IGameboard;
   onGameboardUpdated: any;
+  onEveryShipPlaced: any;
   ships: { name: ShipNames; length: number }[];
   shipIndex: number;
   currentShip: ShipInfo;
@@ -82,7 +84,7 @@ export class View {
 
     frontPageFragment
       .querySelector(".start-game-btn")
-      .addEventListener("click", (e) => {
+      .addEventListener("click", () => {
         const name = (this.getElement(".user-name") as HTMLInputElement).value;
         handler(name);
       });
@@ -97,11 +99,17 @@ export class View {
     board.replaceWith(newBoard);
 
     if (this.areAllShipsPlaced(this.shipIndex)) {
-      return console.log("show next page");
+      this.onEveryShipPlaced();
     }
 
     this.shipIndex++;
   };
+
+  showMainGamePage(userBoard: IGameboard, computerBoard: IGameboard) {
+    const mainOnTheScreen = document.querySelector("main");
+    const mainToReplace = getMainPage(userBoard, computerBoard);
+    mainOnTheScreen.replaceWith(mainToReplace);
+  }
 
   areAllShipsPlaced(shipIndex: number) {
     const LAST_ShIP_INDEX = 4;
@@ -116,6 +124,10 @@ export class View {
     handler: (coordinates: HitCoordinates, ship: ShipNames) => void
   ) => {
     this.onPlaceShip = handler;
+  };
+
+  bindEveryShipPlaced = (handler: any) => {
+    this.onEveryShipPlaced = handler;
   };
 
   showEnteringScreen(showNextScreen: (userName: string) => void) {

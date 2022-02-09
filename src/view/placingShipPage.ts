@@ -15,11 +15,26 @@ export function getPlacingShipPage(userName: string, gameBoard: Gameboard) {
   return mainContainer;
 }
 
-export function createDisplayBoard(gameBoard: Gameboard) {
+export function createDisplayBoard(
+  gameBoard: Gameboard,
+  boardId?: string,
+  className?: string
+) {
   const coordinates = gameBoard.getCoordinates();
 
   const gameBoardContainer = document.createElement("div");
   gameBoardContainer.className = `board w-[300px] h-[300px]`;
+
+  if (boardId) {
+    gameBoardContainer.setAttribute("id", boardId);
+  }
+
+  // TODO: boardId can be undefined. But why doesn't lint warn me?
+  if (typeof boardId === "string") {
+    if (boardId.includes("computer") && !!className) {
+      gameBoardContainer.setAttribute("class", className);
+    }
+  }
 
   const cell = document.createElement("div");
   cell.className = `cell w-[30px] h-full border-black border-[1px]`;

@@ -28,10 +28,6 @@ export class Model {
     this.playerName = "";
   }
 
-  // _commit(gameboard: IGameboard) {
-  //   this.onGameBoardUpdated(gameboard);
-  // }
-
   placeShip(
     player: "user" | "computer",
     coordinates: HitCoordinates,
@@ -53,10 +49,7 @@ export class Model {
       return;
     }
 
-    // First, I need to place the ship.
     this.userBoard.placeShip(ship, coordinates.x, coordinates.y);
-
-    // Next, I need to tell controller to update the board
     this.onShipPlaced(this.userBoard);
   }
 
@@ -69,33 +62,7 @@ export class Model {
   };
 
   addPlayer(userName: string) {
-    console.log("model - addPlayer");
     this.playerName = userName;
     this.onPlayerAdded(userName, this.userBoard);
   }
-
-  // createPlayer(userName: string) {
-  //   this.playerOne = Player("")
-  // }
-
-  // bindGameboardChanged(callback: any) {
-  //   this.onGameboardChanged = callback;
-  // }
-
-  // clickCoordinate(e: any, player: "user" | "computer") {
-  //   const x = e.currentTarget.dataset.xCoord;
-  //   const y = e.currentTarget.dataset.yCoord;
-
-  //   if (player === "user") {
-  //     this.userBoard.receiveAttack(x, y);
-  //   }
-
-  //   if (player === "computer") {
-  //     this.computerBoard.receiveAttack(x, y);
-  //   }
-
-  //   player === "user"
-  //     ? this.onGameboardChanged(this.userBoard, player)
-  //     : this.onGameboardChanged(this.computerBoard, player);
-  // }
 }

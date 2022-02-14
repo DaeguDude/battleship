@@ -16,6 +16,7 @@ export class Model {
   computerBoard: IGameboard;
   onShipPlaced: any;
   onPlayerAdded: any;
+  onReceivedAttack: any;
   playerOne: IPlayer;
   playerTwo: IPlayer;
   playerName: string;
@@ -53,12 +54,21 @@ export class Model {
     this.onShipPlaced(this.userBoard);
   }
 
+  receiveAttack = (coordinates: HitCoordinates) => {
+    this.computerBoard.receiveAttack(coordinates.x, coordinates.y);
+    this.onReceivedAttack();
+  };
+
   bindPlayerAdded = (callback: any) => {
     this.onPlayerAdded = callback;
   };
 
   bindShipPlaced = (callback: any) => {
     this.onShipPlaced = callback;
+  };
+
+  bindReceivedAttack = (callback: any) => {
+    this.onReceivedAttack = callback;
   };
 
   addPlayer(userName: string) {

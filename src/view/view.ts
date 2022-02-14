@@ -1,4 +1,5 @@
 // Manipulating the DOM
+import { ValueIteratorTypeGuard } from "lodash";
 import {
   Gameboard as IGameboard,
   HitCoordinates,
@@ -26,6 +27,7 @@ export class View {
   computerBoard: IGameboard;
   onGameboardUpdated: any;
   onEveryShipPlaced: any;
+  onReceiveAttack: any;
   ships: { name: ShipNames; length: number }[];
   shipIndex: number;
   currentShip: ShipInfo;
@@ -52,26 +54,47 @@ export class View {
     mainOnTheScreen.replaceWith(mainToReplace);
 
     const userBoardUI = document.querySelector(".board") as HTMLDivElement;
-    this.addClickEventHandler(userBoardUI);
+    this.addHanlderOnTheCells(userBoardUI, {
+      eventType: "click",
+      handler: this.placeShipHanlder,
+    });
   }
 
-  addClickEventHandler = (gameBoardUI: HTMLDivElement) => {
+  handleAttack = (e: Event) => {
+    // We need to hit the computer board right?
+    // I think we need to pass in the coordinates.
+    this.onReceiveAttack({ x: "a", y: 5 });
+  };
+
+  addHanlderOnTheCells = (
+    gameBoardUI: Element,
+    {
+      eventType,
+      handler,
+    }: {
+      eventType: string;
+      handler: (e: Event) => void;
+    }
+  ) => {
     const rows = gameBoardUI.children;
     for (let i = 0; i < rows.length; i++) {
       const cells = rows[i].children;
       for (let j = 0; j < cells.length; j++) {
         const cell = cells[j];
-        cell.addEventListener("click", (e) => {
-          const target = e.target as HTMLDivElement;
-          const coordinates: HitCoordinates = {
-            x: target.dataset.xCoord as XCoordinates,
-            y: Number(target.dataset.yCoord) as YCoordinates,
-          };
-
-          this.onPlaceShip(coordinates, this.getCurrentShip().name);
-        });
+        cell.addEventListener(eventType, handler);
       }
     }
+  };
+
+  placeShipHanlder = (e: Event) => {
+    console.log("placeShipHandler");
+    const target = e.target as HTMLDivElement;
+    const coordinates: HitCoordinates = {
+      x: target.dataset.xCoord as XCoordinates,
+      y: Number(target.dataset.yCoord) as YCoordinates,
+    };
+
+    this.onPlaceShip(coordinates, this.getCurrentShip().name);
   };
 
   bindAddPlayer = (handler: any) => {
@@ -95,7 +118,10 @@ export class View {
   updateGameBoard = (gameBoard: IGameboard) => {
     const board = this.getElement(".board");
     const newBoard = ECreateDisplayBoard(gameBoard);
-    this.addClickEventHandler(newBoard);
+    this.addHanlderOnTheCells(newBoard, {
+      eventType: "click",
+      handler: this.placeShipHanlder,
+    });
     board.replaceWith(newBoard);
 
     if (this.areAllShipsPlaced(this.shipIndex)) {
@@ -105,10 +131,23 @@ export class View {
     this.shipIndex++;
   };
 
+  updateMainGameBoard = (gameBoard: IGameboard) => {
+    console.log("updating computer board....");
+  };
+
   showMainGamePage(userBoard: IGameboard, computerBoard: IGameboard) {
     const mainOnTheScreen = document.querySelector("main");
     const mainToReplace = getMainPage(userBoard, computerBoard);
     mainOnTheScreen.replaceWith(mainToReplace);
+
+    // I first need to grap userBoard and computerBoard
+    const computerBoardUI = this.getElement("#computer-board");
+    this.addHanlderOnTheCells(computerBoardUI, {
+      eventType: "click",
+      handler: this.handleAttack,
+    });
+
+    // And then...add handler on the computerBoard
   }
 
   areAllShipsPlaced(shipIndex: number) {
@@ -128,6 +167,10 @@ export class View {
 
   bindEveryShipPlaced = (handler: any) => {
     this.onEveryShipPlaced = handler;
+  };
+
+  bindReceiveAttack = (handler: any) => {
+    this.onReceiveAttack = handler;
   };
 
   showEnteringScreen(showNextScreen: (userName: string) => void) {

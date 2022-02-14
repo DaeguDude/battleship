@@ -33,8 +33,12 @@ export class Game {
   };
 
   onShipPlaced = (gameBoard: IGameboard) => {
-    // View한테 이제 얘기해주어야 겠지. 이거 바뀌었으니까 적용해줘
     this.view.updateGameBoard(gameBoard);
+  };
+
+  onReceivedAttack = () => {
+    console.log("Controller: Computerboard should be updated");
+    this.view.updateMainGameBoard(this.model.computerBoard);
   };
 
   onEveryShipPlaced = () => {
@@ -42,6 +46,10 @@ export class Game {
     const computerBoard = this.model.computerBoard;
 
     this.view.showMainGamePage(userBoard, computerBoard);
+  };
+
+  handleReceiveAttack = (coordinates: HitCoordinates) => {
+    this.model.receiveAttack(coordinates);
   };
 
   handlePlaceShip = (coordinates: HitCoordinates, ship: ShipNames) => {
@@ -64,6 +72,11 @@ export class Game {
     this.view.bindPlaceShip(this.handlePlaceShip);
     this.model.bindShipPlaced(this.onShipPlaced);
 
+    //
     this.view.bindEveryShipPlaced(this.onEveryShipPlaced);
+
+    // When received attack...
+    this.view.bindReceiveAttack(this.handleReceiveAttack);
+    this.model.bindReceivedAttack(this.onReceivedAttack);
   }
 }

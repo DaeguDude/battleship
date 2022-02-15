@@ -1,9 +1,11 @@
 // Manipulating the DOM
 import { ValueIteratorTypeGuard } from "lodash";
 import {
+  CellStatus,
   Gameboard as IGameboard,
   HitCoordinates,
   ShipNames,
+  ShipPositionStatus,
   XCoordinates,
   YCoordinates,
 } from "../types";
@@ -61,9 +63,10 @@ export class View {
   }
 
   handleAttack = (e: Event) => {
-    // We need to hit the computer board right?
-    // I think we need to pass in the coordinates.
-    this.onReceiveAttack({ x: "a", y: 5 });
+    const xCoord = (e.target as HTMLDivElement).dataset.xCoord;
+    const yCoord = (e.target as HTMLDivElement).dataset.yCoord;
+
+    this.onReceiveAttack({ x: xCoord, y: yCoord });
   };
 
   addHanlderOnTheCells = (
@@ -132,6 +135,24 @@ export class View {
   };
 
   updateMainGameBoard = (gameBoard: IGameboard) => {
+    // What are the gameBoard status that can be?
+    const noShips: ShipPositionStatus[] = ["hit", "missed", "noHit"];
+    const ships: ShipNames[] = [
+      "Battleship",
+      "Carrier",
+      "Destroyer",
+      "PatrolBoat",
+      "Submarine",
+    ];
+
+    // computer board can be in 3 status. Because no ships are hidden
+    // missed - x with red background
+    // hit - o with blue background
+    // noHit - nothing
+
+    // user board can be in the same state.
+    // however, when starting out userboard should show the
+    // ships they are in.
     console.log("updating computer board....");
   };
 

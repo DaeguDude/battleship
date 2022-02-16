@@ -10,6 +10,7 @@ import {
   YCoordinates,
 } from "../types";
 import { Gameboard } from "../types";
+import { createDisplayBoardComputer } from "./createDisplayBoard";
 import { getFrontPage } from "./frontPage";
 import { getMainPage } from "./mainGamePage";
 import {
@@ -136,24 +137,28 @@ export class View {
 
   updateMainGameBoard = (gameBoard: IGameboard) => {
     // What are the gameBoard status that can be?
-    const noShips: ShipPositionStatus[] = ["hit", "missed", "noHit"];
-    const ships: ShipNames[] = [
-      "Battleship",
-      "Carrier",
-      "Destroyer",
-      "PatrolBoat",
-      "Submarine",
-    ];
+    // const noShips: ShipPositionStatus[] = ["hit", "missed", "noHit"];
+    // const ships: ShipNames[] = [
+    //   "Battleship",
+    //   "Carrier",
+    //   "Destroyer",
+    //   "PatrolBoat",
+    //   "Submarine",
+    // ];
 
-    // computer board can be in 3 status. Because no ships are hidden
-    // missed - x with red background
-    // hit - o with blue background
-    // noHit - nothing
+    // replace old computer board with a new one
+    const oldComputerBoard = this.getElement("#computer-board");
+    const newComputerBoard = createDisplayBoardComputer(
+      gameBoard,
+      "computer-board",
+      "ml-1"
+    );
+    this.addHanlderOnTheCells(newComputerBoard, {
+      eventType: "click",
+      handler: this.handleAttack,
+    });
 
-    // user board can be in the same state.
-    // however, when starting out userboard should show the
-    // ships they are in.
-    console.log("updating computer board....");
+    oldComputerBoard.replaceWith(newComputerBoard);
   };
 
   showMainGamePage(userBoard: IGameboard, computerBoard: IGameboard) {

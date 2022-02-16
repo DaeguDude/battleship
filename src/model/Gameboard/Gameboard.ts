@@ -7,6 +7,7 @@ import {
   ShipNames,
   CellStatus,
   Ship as ShipType,
+  HitCoordinates,
 } from "../../types";
 import { getXCoordNumber } from "../../utils/getXCoordNumber";
 import {
@@ -18,6 +19,27 @@ function Gameboard(): GameboardType {
   let coordinates = getInitialCoordinates();
   let shipCoordinatesInfo: any = {};
   const ships: ShipType[] = [];
+
+  const placeAllShips = () => {
+    const Carrier = Ship("Carrier");
+    const Battleship = Ship("Battleship");
+    const Destroyer = Ship("Destroyer");
+    const Submarine = Ship("PatrolBoat");
+    const PatrolBoat = Ship("Submarine");
+
+    const allShips = [Carrier, Battleship, Destroyer, Submarine, PatrolBoat];
+
+    for (let i = 0; allShips.length; i++) {
+      const ship = allShips[i];
+      const randomCoordinates = getRandomCoordinates();
+
+      // if (placeable) {
+      //   // place ship
+      // } else {
+      //   // let's try again
+      // }
+    }
+  };
 
   const placeShip = (
     shipName: ShipNames,
@@ -138,6 +160,7 @@ function Gameboard(): GameboardType {
     areAllShipsSunk,
     hasEnoughSpace: checkEnoughSpace,
     hasNoShipOnTheCoordinate,
+    placeAllShips,
   };
 }
 
@@ -164,6 +187,10 @@ function getInitialCoordinates() {
   }
 
   return result;
+}
+
+function getRandomCoordinates(): HitCoordinates {
+  return { x: "a", y: 0 };
 }
 
 export { Gameboard };

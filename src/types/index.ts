@@ -38,6 +38,7 @@ export interface Gameboard {
     coordinateToPlaceTheShip: HitCoordinates
   ) => boolean;
   areAllShipsSunk: () => boolean;
+  placeAllShips: () => void;
 }
 
 export type CellStatus = ShipPositionStatus | ShipNames;

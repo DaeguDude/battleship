@@ -29,6 +29,8 @@ export class Model {
     this.playerName = "";
   }
 
+  placeShipsForComputerBoard() {}
+
   placeShip(
     player: "user" | "computer",
     coordinates: HitCoordinates,
